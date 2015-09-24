@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GUIBuilder</string>
+    <string name="action_settings">プロジェクトの変更</string>
+    <string-array name="spinner">
+        <item >ListPicker</item>
+    </string-array>
+
+</resources>
