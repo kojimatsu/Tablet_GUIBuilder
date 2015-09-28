@@ -7,7 +7,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.DropBoxConnection;
 
 /**
  * Created by matsu on 2014/11/17.
@@ -23,9 +22,9 @@ public class ProjectSelectionFragment extends DialogFragment {
 
     protected static ProjectSelectionFragment newInstance() {
         ProjectSelectionFragment fragment = new ProjectSelectionFragment();
-        String[] projects = DropBoxConnection.getProjects();
+        //String[] projects = DropBoxConnection.getProjects();
         Bundle bundle = new Bundle();
-        bundle.putStringArray(PROJECTS, projects);
+        //bundle.putStringArray(PROJECTS, projects);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -50,8 +49,8 @@ public class ProjectSelectionFragment extends DialogFragment {
                 })
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        DropBoxConnection.setProjectDbxFileInfo(selectItem[0]);
-                        onProjectClickListener.onPositiveClick(DropBoxConnection.getShareInfoPath());
+//                        DropBoxConnection.setProjectDbxFileInfo(selectItem[0]);
+//                        onProjectClickListener.onPositiveClick(DropBoxConnection.getShareInfoPath());
                     }
                 })
                 .create();

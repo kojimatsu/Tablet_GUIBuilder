@@ -9,11 +9,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.w3c.dom.Document;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.DropBoxConnection;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.XMLReading;
 
 /**
@@ -30,7 +32,16 @@ public class Screen extends LinearLayout {
     private String screenName;      // 自身のユースケース名
     private List<Screen> children;  // 子スクリーンリスト
 
-    protected Screen(Context context, String useCaseName) {
+    private static XMLReading xmlReading;
+
+    protected Screen(Context context, XMLReading xmlReading) {
+        super(context);
+        this.xmlReading = xmlReading;
+        String rootUseCaseName = xmlReading.getChildUseCaseNameList(null).get(0);
+        setScreen(rootUseCaseName);
+    }
+
+    private Screen(Context context, String useCaseName) {
         super(context);
         setScreen(useCaseName);
     }
@@ -45,10 +56,11 @@ public class Screen extends LinearLayout {
         setScreenName(screenName);
         // 再帰的に子を生成
         children = new ArrayList<Screen>();
-        XMLReading xmlReading = new XMLReading(DropBoxConnection.getShareInfoPath());
-        List<String> childUseCaseNameList = xmlReading.getChildUseCaseNameList(this.screenName);
-        for(String childUseCaseName : childUseCaseNameList){
-            children.add(new Screen(getContext(),childUseCaseName));
+        List<String> childUseCaseNameList  = xmlReading.getChildUseCaseNameList(this.screenName);
+        if(!childUseCaseNameList.isEmpty()){
+            for(String childUseCaseName : childUseCaseNameList){
+                children.add(new Screen(getContext(),childUseCaseName));
+            }
         }
     }
 
@@ -58,7 +70,9 @@ public class Screen extends LinearLayout {
         // 画面の画像を挿入．ない場合は背景白
         imageView.setBackgroundColor(Color.WHITE);
         ScreenSelectionActivity activity = (ScreenSelectionActivity) getContext();
-        addView(imageView, new LayoutParams(activity.getDeviceWidth() / SCREEN_SIZE_WIDTH, activity.getDeviceHeight() / SCREEN_SIZE_HEIGHT));
+        // いつか動的にサイズ処理する
+        //addView(imageView, new LayoutParams(activity.getDeviceWidth() / SCREEN_SIZE_WIDTH, activity.getDeviceHeight() / SCREEN_SIZE_HEIGHT));
+        addView(imageView, new LayoutParams(120,160));
     }
 
 
@@ -67,6 +81,8 @@ public class Screen extends LinearLayout {
         this.screenName = screenName;
         TextView textView = new TextView(getContext());
         textView.setText(screenName);
+        // いつか動的にサイズ処理する
+        textView.setTextSize(5);
         addView(textView);
     }
 

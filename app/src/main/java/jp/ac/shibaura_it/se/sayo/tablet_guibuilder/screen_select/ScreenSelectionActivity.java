@@ -16,13 +16,14 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.DropBoxConnection;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.XMLReading;
+
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.ScreenEditActivity;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.XMLReading;
 
 
-public class ScreenSelectionActivity extends Activity implements View.OnClickListener, ProjectSelectionFragment.OnProjectClickListener{
+public class ScreenSelectionActivity extends Activity implements View.OnClickListener {
 
     private final static int BETWEEN_SCREEN_SPACE_X = 10;
 
@@ -31,27 +32,12 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DropBoxConnection.linkToDropBox(this);
+        Debug.createXML();
+        XMLReading xmlReading = XMLReading.newInstance();
+        xmlReading.testInit();
+        drawTree(xmlReading);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (DropBoxConnection.getShareInfoPath() != null){
-            drawTree(DropBoxConnection.getShareInfoPath());
-        }else {
-            selectProject();
-        }
-
-    }
-
-    /**
-     * 編集対象のプロジェクトを選択するためにDialogを表示
-     */
-    private void selectProject() {
-        ProjectSelectionFragment projectSelectionFragment = ProjectSelectionFragment.newInstance();
-        projectSelectionFragment.show(getFragmentManager(),"projects");
-    }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -60,30 +46,41 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
         drawLine(rootScreen);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == DropBoxConnection.REQUEST_LINK_TO_DBX) {
-            if (resultCode == Activity.RESULT_OK) {
-                // ... Start using Dropbox files.
-            } else {
-                // ... Link failed or was cancelled by the user.
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+    /**
+     * 画面間に線を描画すためにの座標を取得し設定する.
+     * 描画が完了したonWindowFocusChangedで実行する
+     * @param screen
+     */
+    private void setPoint(Screen screen) {
+        screen.setPoint();
+        List<Screen> childScreenList = screen.getChildren();
+        for (Screen childScreen : childScreenList) {
+            setPoint(childScreen);
+        }
+    }
+
+    /**
+     * 画面間に線を引く
+     */
+    private void drawLine(Screen screen){
+        RelativeLayout root = (RelativeLayout) findViewById(R.id.screen_selection_root_relativeLayout);
+        Point start = screen.getStart();
+        List<Screen> childScreenList = screen.getChildren();
+        for (Screen childScreen : childScreenList) {
+            Point end = childScreen.getEnd();
+            Arrow arrow = new Arrow(this,start,end);
+            root.addView(arrow);
+            drawLine(childScreen);
         }
     }
 
 
     /**
      * スクリーンをツリー状に描画する
-     * @param filePath ex:/休講/share_information.xml
+     * @param xmlReading
      */
-    protected void drawTree(String filePath) {
-        // パース準備
-        XMLReading xmlReading = new XMLReading(filePath);
-        // ルートユースケース名を取得
-        String rootUseCaseName = xmlReading.getChildUseCaseNameList(null).get(0);
-        rootScreen = new Screen(this,rootUseCaseName);
+    protected void drawTree(XMLReading xmlReading) {
+        rootScreen = new Screen(this,xmlReading);
         setContentView(R.layout.screen_selection_activity);
         drawScreen(null);
     }
@@ -122,40 +119,16 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER_VERTICAL);   // 垂直方向中央が効いてない
         linearLayout.setId(View.generateViewId());
-        linearLayout.setPadding(getDeviceWidth() / BETWEEN_SCREEN_SPACE_X,0,0,0);
+        linearLayout.setPadding(getDeviceWidth() / BETWEEN_SCREEN_SPACE_X, 0, 0, 0);
         for (Screen screen : screenList){
             linearLayout.addView(screen);
         }
         return  linearLayout;
     }
 
-    /**
-     * 画面間に線を描画すためにの座標を取得し設定する.
-     * 描画が完了したonWindowFocusChangedで実行する
-     * @param screen
-     */
-    private void setPoint(Screen screen) {
-        screen.setPoint();
-        List<Screen> childScreenList = screen.getChildren();
-        for (Screen childScreen : childScreenList) {
-            setPoint(childScreen);
-        }
-    }
 
-    /**
-     * 画面間に線を引く
-     */
-    private void drawLine(Screen screen){
-        RelativeLayout root = (RelativeLayout) findViewById(R.id.screen_selection_root_relativeLayout);
-        Point start = screen.getStart();
-        List<Screen> childScreenList = screen.getChildren();
-        for (Screen childScreen : childScreenList) {
-            Point end = childScreen.getEnd();
-            Arrow arrow = new Arrow(this,start,end);
-            root.addView(arrow);
-            drawLine(childScreen);
-        }
-    }
+
+
 
     /**
      * 端末の横幅を取得
@@ -181,15 +154,6 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
         return displayMetrics.heightPixels;
     }
 
-    /**
-     * ProjectSelectionFragmentからの通知
-     * @param projectPath ex:/休講/share_information.xml
-     */
-    @Override
-    public void onPositiveClick(String projectPath) {
-        getActionBar().setTitle(DropBoxConnection.getProjectPath());
-        drawTree(projectPath);
-    }
 
     @Override
     public void onClick(View v) {
@@ -213,7 +177,7 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_project_change) {
-            selectProject();
+            //selectProject();
             return true;
         }
         return super.onOptionsItemSelected(item);

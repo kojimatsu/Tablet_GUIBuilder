@@ -11,10 +11,9 @@ import android.widget.RelativeLayout;
 
 import org.xmlpull.v1.XmlPullParser;
 
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.DebugLog;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.DropBoxConnection;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.XMLReading;
+
 
 /**
  * Created by matsu on 2014/11/07.
