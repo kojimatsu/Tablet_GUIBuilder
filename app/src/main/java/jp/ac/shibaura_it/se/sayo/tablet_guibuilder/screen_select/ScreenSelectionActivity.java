@@ -86,7 +86,7 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
     }
 
     /**
-     * スクリーンを再帰的に描画する
+     * スクリーンを再帰的に描画する。
      * @param sameLevelScreenList
      */
     private void drawScreen(List<Screen> sameLevelScreenList){
