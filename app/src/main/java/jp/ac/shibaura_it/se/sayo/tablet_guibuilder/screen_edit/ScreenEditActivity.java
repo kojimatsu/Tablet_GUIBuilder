@@ -17,6 +17,9 @@ public class ScreenEditActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.screen_edit_activity);
+        EditControlFragment editControlFragment = (EditControlFragment) getFragmentManager().findFragmentById(R.id.edit_control_fragment);
+        editControlFragment.setFileName("");
 
     }
 

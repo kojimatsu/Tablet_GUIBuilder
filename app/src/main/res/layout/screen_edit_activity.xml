@@ -11,14 +11,14 @@
 
         <fragment
             android:id="@+id/outline"
-            android:name="jp.ac.shibaura_it.se.sayo.guibuilder.screen_edit.OutLineFragment"
+            android:name="jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.OutLineFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <fragment
             android:id="@+id/awFragment"
-            android:name="jp.ac.shibaura_it.se.sayo.guibuilder.screen_edit.WidgetSelectionFragment"
+            android:name="jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.WidgetSelectionFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" />
@@ -29,7 +29,7 @@
         android:id="@+id/edit_control_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="jp.ac.shibaura_it.se.sayo.guibuilder.screen_edit.EditControlFragment"
+        android:name="jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.EditControlFragment"
         android:layout_weight="1" />
 
 </LinearLayout>
