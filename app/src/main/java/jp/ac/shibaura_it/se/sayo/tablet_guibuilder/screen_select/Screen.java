@@ -71,8 +71,7 @@ public class Screen extends LinearLayout {
         imageView.setBackgroundColor(Color.WHITE);
         ScreenSelectionActivity activity = (ScreenSelectionActivity) getContext();
         // いつか動的にサイズ処理する
-        //addView(imageView, new LayoutParams(activity.getDeviceWidth() / SCREEN_SIZE_WIDTH, activity.getDeviceHeight() / SCREEN_SIZE_HEIGHT));
-        addView(imageView, new LayoutParams(120,160));
+        addView(imageView, new LayoutParams(activity.getDeviceWidth() / SCREEN_SIZE_WIDTH, activity.getDeviceHeight() / SCREEN_SIZE_HEIGHT));
     }
 
 

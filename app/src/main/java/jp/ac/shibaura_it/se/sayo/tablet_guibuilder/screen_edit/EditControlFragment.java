@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
@@ -38,7 +39,9 @@ public class EditControlFragment extends Fragment {
         // ActivityにFragmentを登録する。
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         // Layout位置先の指定
-        fragmentTransaction.add(R.id.edit_screen, screenFragment);
+        fragmentTransaction.replace(R.id.edit_screen, screenFragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.commit();
     }
 
     /**
@@ -47,13 +50,12 @@ public class EditControlFragment extends Fragment {
     private void setSize() {
         RelativeLayout screen = (RelativeLayout) getActivity().findViewById(
                 R.id.edit_screen);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                240, 400);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(360, 600);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         params.addRule(RelativeLayout.CENTER_VERTICAL);
         screen.setLayoutParams(params);
 
-        //動的にする場合
+//        //動的にする場合//        LinearLayout root = (LinearLayout) getActivity().findViewById(R.id.screen_edit_root_linerlayout);
 //        double scale = 0.9;
 //        int width = (int) (root.getWidth() * scale);
 //        int height = (int) (root.getHeight() * scale);

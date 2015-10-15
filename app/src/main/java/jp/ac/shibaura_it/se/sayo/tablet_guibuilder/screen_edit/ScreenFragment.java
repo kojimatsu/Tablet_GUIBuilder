@@ -1,11 +1,13 @@
 package jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -35,15 +37,13 @@ public class ScreenFragment extends Fragment {
         return fragment;
     }
 
-    // ここのメソッドは消すかは保留
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        String filePath = getArguments().getString(FILE_PATH);
-//        XMLReading xmlReading = new XMLReading("/休講ナビ/cancel.xml");
-//        XmlPullParser xmlPullParser = xmlReading.getXmlPullParser();
-//        if (xmlPullParser == null){
-//            DebugLog.log("null");
-//        }
-//        return inflater.inflate(xmlPullParser,container,false);
-//    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        Button button =  new Button(getActivity());
+        button.setText("ボタン");
+        linearLayout.addView(button);
+        return linearLayout;
+    }
 }
