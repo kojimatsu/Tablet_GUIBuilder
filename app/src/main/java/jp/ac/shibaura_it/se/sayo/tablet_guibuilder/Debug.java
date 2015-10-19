@@ -27,12 +27,6 @@ public class Debug  {
     static public  String testDir = "/xml/";
     static public  String testFileName = "sample.xml";
     static public  String testPath = testDir + testFileName;
-    static public void log(String text){
-        Log.d("TAG", text);
-    }
-    static public void log(int text){
-        Log.d("TAG", Integer.toString(text));
-    }
 
     static public void createXML(){
         DocumentBuilderFactory dbfactory = DocumentBuilderFactory.newInstance();

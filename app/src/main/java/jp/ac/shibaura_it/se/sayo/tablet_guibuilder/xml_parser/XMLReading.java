@@ -1,6 +1,7 @@
 package jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser;
 
 import android.os.Environment;
+import android.util.Log;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -8,11 +9,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -61,8 +60,6 @@ public class XMLReading {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
     /**
      * useCaseName(ユースケース)を親に持つ,ユースケース(子)の名前を全て返す．
