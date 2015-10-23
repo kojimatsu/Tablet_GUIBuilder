@@ -17,17 +17,6 @@ import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
 public class WidgetSelectionFragment extends Fragment implements
         View.OnClickListener {
 
-    private WidgetClickListener widgetClickListener;
-
-    public interface WidgetClickListener {
-        public void widgetClicked(int viewId);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        widgetClickListener = (WidgetClickListener) activity;
-        super.onAttach(activity);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,7 +117,7 @@ public class WidgetSelectionFragment extends Fragment implements
     }
 
     /**
-     * 各抽象ウィジェットのviewを初期化
+     * 各ウィジェットのviewを初期化
      */
     private void setAbstractWidget() {
         LinearLayout layoutlayout = (LinearLayout) getActivity().findViewById(
@@ -156,11 +145,13 @@ public class WidgetSelectionFragment extends Fragment implements
 
     }
 
-    private int viewID;
+    private int viewID = -1;
     private boolean clicked = false;
+    private View clickedView;
 
     @Override
     public void onClick(View v) {
+        clickedView = v;
         setAbstractWidget();
         if (v.getId() != getViewID()) {
             clicked = true;
@@ -177,7 +168,6 @@ public class WidgetSelectionFragment extends Fragment implements
                 v.setBackgroundResource(R.drawable.view_pressed_false);
             }
         }
-        widgetClickListener.widgetClicked(getViewID());
     }
 
     private int getViewID() {
@@ -186,5 +176,12 @@ public class WidgetSelectionFragment extends Fragment implements
 
     private void setViewID(int viewID) {
         this.viewID = viewID;
+    }
+
+    public View getClickedView(){
+        if (clicked){
+            return clickedView;
+        }
+        return null;
     }
 }

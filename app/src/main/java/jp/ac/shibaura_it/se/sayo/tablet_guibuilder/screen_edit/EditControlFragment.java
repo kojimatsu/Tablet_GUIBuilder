@@ -64,7 +64,4 @@ public class EditControlFragment extends Fragment {
 //        }
     }
 
-    public void notice(int viewId) {
-
-    }
 }

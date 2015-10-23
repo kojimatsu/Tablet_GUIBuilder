@@ -77,4 +77,8 @@ public class Debug  {
             e.printStackTrace();
         }
     }
+
+    static public void log(String text){
+        Log.d("TAG",text);
+    }
 }

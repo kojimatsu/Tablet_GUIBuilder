@@ -1,6 +1,7 @@
 package jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_select;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -17,6 +18,7 @@ import java.util.List;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
 
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.ScreenEditActivity;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.XMLReading;
 
 
@@ -68,10 +70,6 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
         return textView;
     }
 
-    private void addView(){
-
-    }
-
 
 
 
@@ -103,6 +101,10 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         TextView textView = (TextView) v;
+        Intent intent = new Intent(getApplicationContext(),ScreenEditActivity.class);
+        String usecaseName = (String) textView.getText();
+        intent.putExtra(XMLReading.USECASE_NAME, usecaseName);
+        startActivity(intent);
     }
 
     @Override

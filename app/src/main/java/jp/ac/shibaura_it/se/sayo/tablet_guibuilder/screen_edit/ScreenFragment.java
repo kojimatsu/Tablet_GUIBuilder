@@ -15,6 +15,7 @@ import org.xmlpull.v1.XmlPullParser;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.XMLReading;
 
 
 /**
@@ -22,28 +23,46 @@ import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
  */
 public class ScreenFragment extends Fragment {
 
-    private final static String FILE_PATH = "NAME";
+    private LinearLayout root;
 
     /**
      *
-     * @param useCasePath プロジェクト名/ユースケース名
+     * @param usecaseName ユースケース名
      * @return
      */
-    protected static ScreenFragment newInstance(String useCasePath) {
+    protected static ScreenFragment newInstance(String usecaseName) {
         ScreenFragment fragment = new ScreenFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(FILE_PATH, useCasePath);
+        bundle.putString(XMLReading.USECASE_NAME, usecaseName);
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        LinearLayout linearLayout = new LinearLayout(getActivity());
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        Button button =  new Button(getActivity());
-        button.setText("ボタン");
-        linearLayout.addView(button);
-        return linearLayout;
+        root = new LinearLayout(getActivity());
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    ScreenEditActivity activity = (ScreenEditActivity) getActivity();
+                    View view = activity.onClickedFromScreenFragment();
+                    Debug.log("@");
+//                    Button b = (Button) v;
+//                    Debug.log((String) b.getText());
+                    root.addView(new Button(getActivity()));
+                } catch (ClassCastException e) {
+                    throw new ClassCastException("activity が OnClickListener を実装していません.");
+                }
+            }
+        });
     }
 }

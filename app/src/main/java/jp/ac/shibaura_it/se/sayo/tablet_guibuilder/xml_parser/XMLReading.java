@@ -29,8 +29,8 @@ import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
 public class XMLReading {
 
     // 共通設計情報（XMLファイル）の要素名や属性名
-    protected final String TAG_USECASE = "UseCaseScreen";
-    protected final String USECASE_NAME = "name";
+    public final static String TAG_USECASE = "UseCaseScreen";
+    public final static String USECASE_NAME = "name";
 
     protected Document document;                // パース対象のDocument
 

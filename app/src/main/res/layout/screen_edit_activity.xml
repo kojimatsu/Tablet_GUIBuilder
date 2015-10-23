@@ -17,7 +17,7 @@
             android:layout_weight="1" />
 
         <fragment
-            android:id="@+id/awFragment"
+            android:id="@+id/wsFragment"
             android:name="jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.WidgetSelectionFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
