@@ -52,16 +52,9 @@ public class ScreenFragment extends Fragment {
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    ScreenEditActivity activity = (ScreenEditActivity) getActivity();
-                    View view = activity.onClickedFromScreenFragment();
-                    Debug.log("@");
-//                    Button b = (Button) v;
-//                    Debug.log((String) b.getText());
-                    root.addView(new Button(getActivity()));
-                } catch (ClassCastException e) {
-                    throw new ClassCastException("activity が OnClickListener を実装していません.");
-                }
+                ScreenEditActivity activity = (ScreenEditActivity) getActivity();
+                View view = activity.onClickedFromScreenFragment();
+                root.addView(view);
             }
         });
     }

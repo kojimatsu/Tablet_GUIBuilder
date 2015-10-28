@@ -180,7 +180,7 @@ public class WidgetSelectionFragment extends Fragment implements
 
     public View getClickedView(){
         if (clicked){
-            return clickedView;
+            return GenerationWidget.createView(getActivity(),clickedView);
         }
         return null;
     }
