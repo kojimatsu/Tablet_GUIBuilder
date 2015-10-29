@@ -33,6 +33,7 @@ public class XMLReading {
     public final static String USECASE_NAME = "name";
 
     protected Document document;                // パース対象のDocument
+    protected String XML_fileName;                  // yyy/xxx/test.xml  ファイル名込みの絶対パス
 
 
     public static XMLReading newInstance(){
@@ -44,12 +45,12 @@ public class XMLReading {
      * 今回はテス地のため、端末内のSDカードから取得する
      */
     public void testInit(){
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Debug.testPath;
+        XML_fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Debug.testPath;
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = null;
         try {
             documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            InputStream inputStream = new FileInputStream(path);
+            InputStream inputStream = new FileInputStream(XML_fileName);
             this.document = documentBuilder.parse(inputStream);
         } catch (ParserConfigurationException e) {
             e.printStackTrace();

@@ -9,12 +9,12 @@
         android:layout_weight="2"
         android:orientation="vertical">
 
-        <fragment
-            android:id="@+id/outline"
-            android:name="jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.OutLineFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+        <!--<fragment-->
+            <!--android:id="@+id/outline"-->
+            <!--android:name="jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.OutLineFragment"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1" />-->
 
         <fragment
             android:id="@+id/wsFragment"
