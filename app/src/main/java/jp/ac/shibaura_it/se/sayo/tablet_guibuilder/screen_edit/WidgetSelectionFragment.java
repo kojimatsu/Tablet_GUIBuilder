@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.MyButton;
 
 /**
  * Created by matsu on 2014/11/07.
@@ -35,8 +38,8 @@ public class WidgetSelectionFragment extends Fragment implements
     public void onStart() {
         setAbstractWidget();
 
-        LinearLayout layoutButton = (LinearLayout) getActivity().findViewById(
-                R.id.layout_button);
+        TextView layoutButton = (TextView) getActivity().findViewById(
+                R.id._layout);
         layoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,23 +49,19 @@ public class WidgetSelectionFragment extends Fragment implements
                         .findViewById(R.id.inputwidget_layout);
                 LinearLayout outputWidgetLayout = (LinearLayout) getActivity()
                         .findViewById(R.id.outputwidget_layout);
-                ImageView imageView = (ImageView) getActivity().findViewById(
-                        R.id.layout_button_imageView);
                 if (layoutlayout.getVisibility() == View.GONE) {
                     layoutlayout.setVisibility(View.VISIBLE);
-                    imageView.setImageResource(R.drawable.expander_ic_maximized);
                     inputWidgetLayout.setVisibility(View.GONE);
                     outputWidgetLayout.setVisibility(View.GONE);
                 } else {
                     layoutlayout.setVisibility(View.GONE);
-                    imageView.setImageResource(R.drawable.expander_ic_minimized);
                 }
 
             }
         });
 
-        LinearLayout inputWidgetButton = (LinearLayout) getActivity().findViewById(
-                R.id.inputwidget_button);
+        TextView inputWidgetButton = (TextView) getActivity().findViewById(
+                R.id._inputWidget);
         inputWidgetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,23 +71,19 @@ public class WidgetSelectionFragment extends Fragment implements
                         .findViewById(R.id.inputwidget_layout);
                 LinearLayout outputWidgetLayout = (LinearLayout) getActivity()
                         .findViewById(R.id.outputwidget_layout);
-                ImageView imageView = (ImageView) getActivity().findViewById(
-                        R.id.inputwidget_button_imageView);
                 if (inputWidgetLayout.getVisibility() == View.GONE) {
                     layoutlayout.setVisibility(View.GONE);
                     inputWidgetLayout.setVisibility(View.VISIBLE);
-                    imageView.setImageResource(R.drawable.expander_ic_maximized);
                     outputWidgetLayout.setVisibility(View.GONE);
                 } else {
                     inputWidgetLayout.setVisibility(View.GONE);
-                    imageView.setImageResource(R.drawable.expander_ic_minimized);
                 }
 
             }
         });
 
-        LinearLayout outputWidgetButton = (LinearLayout) getActivity().findViewById(
-                R.id.outputwidget_button);
+        TextView outputWidgetButton = (TextView) getActivity().findViewById(
+                R.id._outputWidget);
         outputWidgetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,16 +93,12 @@ public class WidgetSelectionFragment extends Fragment implements
                         .findViewById(R.id.inputwidget_layout);
                 LinearLayout outputWidgetLayout = (LinearLayout) getActivity()
                         .findViewById(R.id.outputwidget_layout);
-                ImageView imageView = (ImageView) getActivity().findViewById(
-                        R.id.outputwidget_button_imageView);
                 if (outputWidgetLayout.getVisibility() == View.GONE) {
                     layoutlayout.setVisibility(View.GONE);
                     inputWidgetLayout.setVisibility(View.GONE);
                     outputWidgetLayout.setVisibility(View.VISIBLE);
-                    imageView.setImageResource(R.drawable.expander_ic_maximized);
                 } else {
                     outputWidgetLayout.setVisibility(View.GONE);
-                    imageView.setImageResource(R.drawable.expander_ic_minimized);
                 }
 
             }
@@ -178,10 +169,21 @@ public class WidgetSelectionFragment extends Fragment implements
         this.viewID = viewID;
     }
 
-    public View getClickedView(){
+
+    public View createView(){
+        Activity activity = getActivity();
+        View view = null;
         if (clicked){
-            return GenerationWidget.createView(getActivity(),clickedView);
+            int id = clickedView.getId();
+
+            if (id == R.id._button){
+                view = new MyButton(activity, clickedView).getView();
+            }else if (id == R.id._label){
+                TextView textView = new TextView(activity);
+                textView.setText("ラベル");
+                view = textView;
+            }
         }
-        return null;
+        return view;
     }
 }

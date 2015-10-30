@@ -5,39 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/frame"
+    android:background="@drawable/fragment_frame"
     tools:context="jp.ac.shibaura_it.se.sayo.guibuilder.MainActivity$PlaceholderFragment">
 
     <LinearLayout
-        android:id="@+id/abstract_widget_layout"
+        android:id="@+id/selection_widgets"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <LinearLayout
-            android:id="@+id/layout_button"
+        <TextView
+            android:id="@+id/_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/button_dir_color"
-            android:orientation="horizontal"
-            android:src="@drawable/expander_ic_minimized">
-
-            <ImageView
-                android:id="@+id/layout_button_imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:src="@drawable/expander_ic_minimized" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="Layout"
-                android:textSize="30dp" />
-
-        </LinearLayout>
+            android:gravity="center_horizontal"
+            android:text="Layout"
+            android:textSize="20dp"
+            android:background="#7d7f80"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="5dp" />
 
 
         <LinearLayout
@@ -91,30 +77,16 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/inputwidget_button"
+        <TextView
+            android:id="@+id/_inputWidget"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/button_dir_color"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/inputwidget_button_imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:src="@drawable/expander_ic_minimized" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="Input Widget"
-                android:textSize="30dp" />
-
-        </LinearLayout>
+            android:gravity="center_horizontal"
+            android:text="InputWidget"
+            android:textSize="20dp"
+            android:background="#7d7f80"
+            android:textColor="#ffffff"
+            android:layout_marginBottom="5dp" />
 
         <LinearLayout
             android:id="@+id/inputwidget_layout"
@@ -279,29 +251,15 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/outputwidget_button"
+        <TextView
+            android:id="@+id/_outputWidget"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/button_dir_color"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/outputwidget_button_imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:src="@drawable/expander_ic_minimized" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="Output Widget"
-                android:textSize="30dp" />
-        </LinearLayout>
+            android:gravity="center_horizontal"
+            android:text="OutputWidget"
+            android:textSize="20dp"
+            android:background="#7d7f80"
+            android:textColor="#ffffff" />
 
 
         <LinearLayout

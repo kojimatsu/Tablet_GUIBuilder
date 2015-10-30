@@ -26,7 +26,7 @@ public class ScreenEditActivity extends Activity {
 
     public View onClickedFromScreenFragment() {
         WidgetSelectionFragment widgetSelectionFragment = (WidgetSelectionFragment) getFragmentManager().findFragmentById(R.id.wsFragment);
-        View clickedView = widgetSelectionFragment.getClickedView();
+        View clickedView = widgetSelectionFragment.createView();
         return clickedView;
     }
 }
