@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.GestureDialog;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.ScreenEditActivity;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformation;
 
@@ -63,7 +64,7 @@ public class OutputWidget extends View implements View.OnClickListener{
     }
 
     private static View beforeClickedView = null;
-    private boolean clicked = false;
+
     @Override
     public void onClick(View v) {
 

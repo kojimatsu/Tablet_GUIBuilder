@@ -34,6 +34,5 @@ public class ScreenEditActivity extends Activity {
     public void noticeFromOutputWidget() {
         EditControlFragment editControlFragment = (EditControlFragment) getFragmentManager().findFragmentById(R.id.edit_control_fragment);
         editControlFragment.addSettingWidgetFragment();
-
     }
 }
