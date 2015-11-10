@@ -1,21 +1,14 @@
 package jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
-import org.xmlpull.v1.XmlPullParser;
-
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.XMLReading;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.OutputWidget;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformation;
 
 
 /**
@@ -33,7 +26,7 @@ public class ScreenFragment extends Fragment {
     protected static ScreenFragment newInstance(String usecaseName) {
         ScreenFragment fragment = new ScreenFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(XMLReading.USECASE_NAME, usecaseName);
+        bundle.putString(ShareInformation.ATTRIBUTE_NAME, usecaseName);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -43,6 +36,7 @@ public class ScreenFragment extends Fragment {
         root = new LinearLayout(getActivity());
         root.setOrientation(LinearLayout.VERTICAL);
         root.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        root = ShareInformation.getScreen(root,getUsecaseName());
         return root;
     }
 
@@ -53,9 +47,18 @@ public class ScreenFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ScreenEditActivity activity = (ScreenEditActivity) getActivity();
-                View view = activity.onClickedFromScreenFragment();
-                root.addView(view);
+                OutputWidget view = activity.onClickedFromScreenFragment();
+                if (view != null) {
+                    root.addView(view.getView());
+                    String usecaseName = getUsecaseName();
+                    ShareInformation.writeWidget(usecaseName, view);
+                }
             }
         });
+    }
+
+    private String getUsecaseName(){
+        Bundle bundle = getArguments();
+        return bundle.getString(ShareInformation.ATTRIBUTE_NAME);
     }
 }

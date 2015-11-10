@@ -12,7 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.GenerationWidget;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.MyButton;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.MyLabel;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.OutputWidget;
 
 /**
  * Created by matsu on 2014/11/07.
@@ -170,19 +173,11 @@ public class WidgetSelectionFragment extends Fragment implements
     }
 
 
-    public View createView(){
-        Activity activity = getActivity();
-        View view = null;
+    public OutputWidget createView(){;
+        OutputWidget view = null;
         if (clicked){
             int id = clickedView.getId();
-
-            if (id == R.id._button){
-                view = new MyButton(activity, clickedView).getView();
-            }else if (id == R.id._label){
-                TextView textView = new TextView(activity);
-                textView.setText("ラベル");
-                view = textView;
-            }
+            view = GenerationWidget.createWidget(getActivity(),id);
         }
         return view;
     }

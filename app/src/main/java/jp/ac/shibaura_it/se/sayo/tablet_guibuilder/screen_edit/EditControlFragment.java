@@ -15,11 +15,6 @@ import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
  */
 public class EditControlFragment extends Fragment {
 
-    public EditControlFragment(){
-
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.edit_control_fragment, container, false);
@@ -27,9 +22,9 @@ public class EditControlFragment extends Fragment {
 
     /**
      *
-     * @param useCasePath プロジェクト名/ユースケース名
+     * @param useCasePath ユースケース名
      */
-    public void setFileName(String useCasePath) {
+    public void addScreenFragment(String useCasePath) {
         setSize();
         ScreenFragment screenFragment = ScreenFragment.newInstance(useCasePath);
         // ActivityにFragmentを登録する。
@@ -50,18 +45,16 @@ public class EditControlFragment extends Fragment {
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         params.addRule(RelativeLayout.CENTER_VERTICAL);
         screen.setLayoutParams(params);
+    }
 
-//        //動的にする場合//        LinearLayout root = (LinearLayout) getActivity().findViewById(R.id.screen_edit_root_linerlayout);
-//        double scale = 0.9;
-//        int width = (int) (root.getWidth() * scale);
-//        int height = (int) (root.getHeight() * scale);
-//        if (width != screen.getWidth()) {
-//            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-//                    width, height);
-//            params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-//            params.addRule(RelativeLayout.CENTER_VERTICAL);
-//            screen.setLayoutParams(params);
-//        }
+    public  void addSettingWidgetFragment(){
+        SettingWidgetFragment settingWidgetFragment = SettingWidgetFragment.newInstance();
+        // ActivityにFragmentを登録する。
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        // Layout位置先の指定
+        fragmentTransaction.replace(R.id.setting_widget, settingWidgetFragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.commit();
     }
 
 }
