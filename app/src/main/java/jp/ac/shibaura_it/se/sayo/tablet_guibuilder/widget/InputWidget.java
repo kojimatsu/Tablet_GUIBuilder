@@ -13,8 +13,8 @@ import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
  */
 public class InputWidget extends OutputWidget{
 
-    protected InputWidget(Context context, int id) {
-        super(context, id);
+    protected InputWidget(Context context, int widgetID) {
+        super(context, widgetID);
         setIsInputwidget();
     }
 

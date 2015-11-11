@@ -23,9 +23,9 @@ public class OutputWidget extends View implements View.OnClickListener{
     protected int uniqueID;                 // 固有のID（重複なし）
     protected View view;                    // 自分自身
 
-    protected OutputWidget(Context context, int id) {
+    protected OutputWidget(Context context, int widgetID) {
         super(context);
-        widgetID = id;
+        this.widgetID = widgetID;
         uniqueID = createCount++;
     }
 

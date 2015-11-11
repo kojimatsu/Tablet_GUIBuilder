@@ -47,7 +47,7 @@ public class ScreenFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ScreenEditActivity activity = (ScreenEditActivity) getActivity();
-                OutputWidget view = activity.onClickedFromScreenFragment();
+                OutputWidget view = activity.noticeFromScreenFragment();
                 if (view != null) {
                     root.addView(view.getView());
                     String usecaseName = getUsecaseName();

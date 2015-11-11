@@ -25,7 +25,7 @@ public class ScreenEditActivity extends Activity {
         editControlFragment.addScreenFragment(usecaseName);
     }
 
-    public OutputWidget onClickedFromScreenFragment() {
+    public OutputWidget noticeFromScreenFragment() {
         WidgetSelectionFragment widgetSelectionFragment = (WidgetSelectionFragment) getFragmentManager().findFragmentById(R.id.wsFragment);
         OutputWidget clickedView = widgetSelectionFragment.createView();
         return clickedView;

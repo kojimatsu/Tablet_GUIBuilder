@@ -12,8 +12,8 @@ import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
  */
 public class MyButton extends InputWidget {
 
-    public MyButton(Context context, int id) {
-        super(context, id);
+    public MyButton(Context context, int widgetID) {
+        super(context, widgetID);
         setView(createButton());
     }
 
@@ -24,7 +24,7 @@ public class MyButton extends InputWidget {
 
     private Button createButton(){
         Button button = new Button(getContext());
-        button.setText("Button");
+        button.setText("ボタン");
         button.setClickable(false);
         return button;
     }

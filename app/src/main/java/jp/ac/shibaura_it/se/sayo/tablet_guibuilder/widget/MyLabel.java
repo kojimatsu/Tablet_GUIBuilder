@@ -9,8 +9,8 @@ import android.widget.TextView;
  * Created by 浩司 on 2015/11/06.
  */
 public class MyLabel extends OutputWidget {
-    public MyLabel(Context context, int id) {
-        super(context, id);
+    public MyLabel(Context context, int widgetID) {
+        super(context, widgetID);
         setView(createTextView());
     }
 
