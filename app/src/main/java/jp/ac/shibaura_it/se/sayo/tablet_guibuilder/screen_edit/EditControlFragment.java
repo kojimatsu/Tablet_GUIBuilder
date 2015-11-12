@@ -48,7 +48,7 @@ public class EditControlFragment extends Fragment {
     }
 
     public  void addSettingWidgetFragment(){
-        SettingWidgetFragment settingWidgetFragment = SettingWidgetFragment.newInstance();
+        SettingActionWidgetFragment settingWidgetFragment = SettingActionWidgetFragment.newInstance();
         // ActivityにFragmentを登録する。
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         // Layout位置先の指定

@@ -134,7 +134,7 @@ public class ShareInformation extends XMLWriting {
         node.appendChild(tagWidget);
         write(shareInf_XML,filePath);
     }
-
+//
     private static String getWidget(OutputWidget view){
         int widgetID = view.getWidgetID();
         if (widgetID == R.id._button){
