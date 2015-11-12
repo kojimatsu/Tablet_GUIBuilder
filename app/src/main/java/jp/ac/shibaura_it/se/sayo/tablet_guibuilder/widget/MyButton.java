@@ -12,13 +12,13 @@ import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
  */
 public class MyButton extends InputWidget {
 
-    public MyButton(Context context, int widgetID) {
-        super(context, widgetID);
+    public MyButton(Context context) {
+        super(context, R.id._button);
         setView(createButton());
     }
 
-    public MyButton(Context context, int widgetID, String uniqueID) {
-        super(context, widgetID, uniqueID);
+    public MyButton(Context context, String uniqueID) {
+        super(context, R.id._button, uniqueID);
         setView(createButton());
     }
 

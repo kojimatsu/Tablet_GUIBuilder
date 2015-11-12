@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.OutputWidget;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformation;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManeger;
 
 
 /**
@@ -17,7 +17,6 @@ import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformation;
 public class ScreenFragment extends Fragment {
 
     private LinearLayout root;
-
     /**
      *
      * @param usecaseName ユースケース名
@@ -26,7 +25,7 @@ public class ScreenFragment extends Fragment {
     protected static ScreenFragment newInstance(String usecaseName) {
         ScreenFragment fragment = new ScreenFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(ShareInformation.ATTRIBUTE_NAME, usecaseName);
+        bundle.putString(ShareInformationManeger.ATTRIBUTE_NAME, usecaseName);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -36,7 +35,8 @@ public class ScreenFragment extends Fragment {
         root = new LinearLayout(getActivity());
         root.setOrientation(LinearLayout.VERTICAL);
         root.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        root = ShareInformation.getScreen(root,getUsecaseName());
+        ShareInformationManeger shareInformationManeger = ShareInformationManeger.newInstance();
+        root = shareInformationManeger.getScreen(root,getUsecaseName());
         return root;
     }
 
@@ -51,7 +51,8 @@ public class ScreenFragment extends Fragment {
                 if (view != null) {
                     root.addView(view.getView());
                     String usecaseName = getUsecaseName();
-                    ShareInformation.writeWidget(usecaseName, view);
+                    ShareInformationManeger shareInformationManeger = ShareInformationManeger.newInstance();
+                    shareInformationManeger.writeWidget(usecaseName, view);
                 }
             }
         });
@@ -59,6 +60,6 @@ public class ScreenFragment extends Fragment {
 
     private String getUsecaseName(){
         Bundle bundle = getArguments();
-        return bundle.getString(ShareInformation.ATTRIBUTE_NAME);
+        return bundle.getString(ShareInformationManeger.ATTRIBUTE_NAME);
     }
 }

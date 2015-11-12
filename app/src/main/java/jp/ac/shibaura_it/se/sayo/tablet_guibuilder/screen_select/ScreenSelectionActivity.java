@@ -18,7 +18,7 @@ import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.ScreenEditActivity;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformation;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManeger;
 
 
 public class ScreenSelectionActivity extends Activity implements View.OnClickListener {
@@ -31,7 +31,7 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
 
         /*******************************************************************/
         Debug.createXML();
-        ShareInformation.testInit();
+        ShareInformationManeger.testInit();
         /*******************************************************************/
         initDraw();
     }
@@ -41,27 +41,27 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
      */
     private void initDraw(){
         LinearLayout root = (LinearLayout) findViewById(R.id.screen_selection_activity_root_linearLayout);
-        LinearLayout linearLayout = getLinearLayout();
-        String rootUsecaseScreenName = ShareInformation.getChildUseCaseNameList(null).get(0);
-        TextView textView = getTextView(rootUsecaseScreenName);
+        LinearLayout linearLayout = createLinearLayout();
+        ShareInformationManeger shareInformationManeger = ShareInformationManeger.newInstance();
+        String rootUsecaseScreenName = shareInformationManeger.getChildUseCaseNameList(null).get(0);
+        TextView textView = createTextView(rootUsecaseScreenName);
         linearLayout.addView(textView);
         root.addView(linearLayout);
-        List<String> childUsecaseScreenName = ShareInformation.getChildUseCaseNameList(rootUsecaseScreenName);
-        linearLayout = getLinearLayout();
+        List<String> childUsecaseScreenName = shareInformationManeger.getChildUseCaseNameList(rootUsecaseScreenName);
+        linearLayout = createLinearLayout();
         for (String name : childUsecaseScreenName) {
-
-            linearLayout.addView(getTextView(name));
+            linearLayout.addView(createTextView(name));
         }
         root.addView(linearLayout);
     }
 
-    private LinearLayout getLinearLayout(){
+    private LinearLayout createLinearLayout(){
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         return linearLayout;
     }
 
-    private TextView getTextView(String text){
+    private TextView createTextView(String text){
         TextView textView = new TextView(this);
         textView.setText(text);
         textView.setOnClickListener(this);
@@ -101,7 +101,7 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
         TextView textView = (TextView) v;
         Intent intent = new Intent(getApplicationContext(),ScreenEditActivity.class);
         String usecaseName = (String) textView.getText();
-        intent.putExtra(ShareInformation.ATTRIBUTE_NAME, usecaseName);
+        intent.putExtra(ShareInformationManeger.ATTRIBUTE_NAME, usecaseName);
         startActivity(intent);
     }
 

@@ -27,7 +27,7 @@ public class SettingActionWidgetFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-//
+
         ImageView  transition =  ((ImageView) getActivity().findViewById(R.id.to_transition));
         transition.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +45,8 @@ public class SettingActionWidgetFragment extends Fragment {
             }
         });
 
-        ((ImageView) getActivity().findViewById(R.id.delete_widget)).setOnClickListener(new View.OnClickListener() {
+        ImageView delete = ((ImageView) getActivity().findViewById(R.id.delete_widget));
+        delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

@@ -4,12 +4,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.GestureDialog;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.ScreenEditActivity;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformation;
 
 /**
  * Created by matsu on 2015/10/29.
@@ -21,7 +18,7 @@ public class OutputWidget extends View implements View.OnClickListener{
     protected int widgetID;                 // ウィジェットの種類を判別するID
     private static int createCount = 0;     // OutputWidget（コンストラクタ）が実行された回数
     protected int uniqueID;                 // 固有のID（重複なし）
-    protected View view;                    // 自分自身
+    protected LinearLayout view;                    // 自分自身 (クリック時の色変更の挙動のため、LinearLayout内に格納されている)
 
     protected OutputWidget(Context context, int widgetID) {
         super(context);
@@ -61,6 +58,15 @@ public class OutputWidget extends View implements View.OnClickListener{
 
     public int getUniqueID() {
         return uniqueID;
+    }
+
+    public void setUniqueID(int uniqueID){
+        this.uniqueID = uniqueID;
+        createCount--;
+    }
+
+    public String getWidgetName(){
+        return CreationWidgetController.getWidgetName(widgetID);
     }
 
     private static View beforeClickedView = null;

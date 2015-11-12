@@ -1,20 +1,15 @@
 package jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.GenerationWidget;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.MyButton;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.MyLabel;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.CreationWidgetController;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.OutputWidget;
 
 /**
@@ -173,12 +168,12 @@ public class WidgetSelectionFragment extends Fragment implements
     }
 
 
-    public OutputWidget createView(){;
-        OutputWidget view = null;
+    public OutputWidget createView(){
+        OutputWidget outputWidget = null;
         if (clicked){
-            int id = clickedView.getId();
-            view = GenerationWidget.createWidget(getActivity(),id);
+            int widgetID = clickedView.getId();
+            outputWidget = CreationWidgetController.createWidget(getActivity(), widgetID);
         }
-        return view;
+        return outputWidget;
     }
 }

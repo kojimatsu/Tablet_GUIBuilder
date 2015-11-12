@@ -23,13 +23,8 @@ public class XMLWriting extends XMLReading {
         super();
     }
 
-
-    public static XMLWriting newInstance(){
-        return new XMLWriting();
-    }
-
     // Documentオブジェクトをファイルに出力
-    protected static void write(Document document, String path) {
+    protected void write(Document document, String path) {
 
         File file =new File(path);
         FileOutputStream fos = null;
