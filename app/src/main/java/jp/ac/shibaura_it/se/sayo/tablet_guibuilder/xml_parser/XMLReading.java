@@ -83,7 +83,7 @@ public class XMLReading {
 
     /**
      * 指定した属性値を持っている要素を取得する
-     * @param element
+     * @param element       element以下を再帰的に探索する
      * @param attrName      属性名
      * @param attrValue     属性値
      * @return
