@@ -75,6 +75,7 @@ public class ShareInformationManeger extends XMLWriting {
     /**
      * useCaseName(ユースケース)を親に持つ,ユースケース(子)の名前を全て返す．
      * nullの場合はルートユースケース名を返す．
+     * 追記:全てではなくルートユースケースの直下のみだった
      * @param useCaseName
      * @return
      */
