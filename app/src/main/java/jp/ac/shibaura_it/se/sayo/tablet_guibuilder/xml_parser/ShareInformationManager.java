@@ -235,22 +235,15 @@ public class ShareInformationManager extends XMLWriting {
     private String getParentUseCase(Element parent, String childUseCaseName){
         String parentUseCaseName = null;
         List<Element> childUseCaseList = getChildUseCaseList(getAttribute(parent,ATTRIBUTE_NAME));
-        Debug.log("size : "+childUseCaseList.size());
         for (Element childUseCase : childUseCaseList) {
-            Debug.log("parent : "+getAttribute(childUseCase,ATTRIBUTE_NAME));
             if (getAttribute(childUseCase,ATTRIBUTE_NAME).equals(childUseCaseName)){
-                Debug.log("parent@ : "+getAttribute(parent,ATTRIBUTE_NAME));
                 parentUseCaseName = getAttribute(parent,ATTRIBUTE_NAME);
+            }
+            if (parentUseCaseName != null){
                 break;
             }
-            if (parentUseCaseName == null){
-                Debug.log("parent@@ : "+parentUseCaseName);
-                Debug.log("!!!!");
-                parentUseCaseName = getParentUseCase(childUseCase,childUseCaseName);
-            }
-
+            parentUseCaseName = getParentUseCase(childUseCase,childUseCaseName);
         }
-        Debug.log("parent@@@ : "+parentUseCaseName);
         return parentUseCaseName;
     }
 }

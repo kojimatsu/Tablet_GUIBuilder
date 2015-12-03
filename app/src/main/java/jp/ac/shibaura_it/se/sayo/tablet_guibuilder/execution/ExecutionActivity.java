@@ -35,8 +35,7 @@ public class ExecutionActivity extends Activity{
                 ShareInformationManager shareInformationManager = ShareInformationManager.newInstance();
                 Bundle bundle = screen.getArguments();
                 String currentUseCaseName = bundle.getString(ShareInformationManager.ATTRIBUTE_NAME);
-                String parentUseCaseName = shareInformationManager.getParentUseCase(shareInformationManager.getParentUseCase(currentUseCaseName));
-                Debug.log("------------");
+                String parentUseCaseName = shareInformationManager.getParentUseCase(currentUseCaseName);
                 if (parentUseCaseName != null){
                     setScreenFragment(parentUseCaseName);
                 }
