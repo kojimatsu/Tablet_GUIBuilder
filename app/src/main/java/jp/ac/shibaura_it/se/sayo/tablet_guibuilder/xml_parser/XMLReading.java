@@ -41,17 +41,6 @@ public class XMLReading {
     }
 
     /**
-     * attrNameで指定した属性の値を取得
-     * @param node
-     * @param attrName
-     * @return
-     */
-    public String getAttribute(Node node, String attrName) {
-        Element element = (Element) node;
-        return getAttribute(element, attrName);
-    }
-
-    /**
      * * parentAttrNameの値がparentAttrValueである属性を親とし、親の直下の子を全て取得する。
      * つまり、指定する属性値はユニークでなければならない
      * @param document
@@ -65,11 +54,23 @@ public class XMLReading {
     }
 
     /**
+     * * parentAttrNameの値がparentAttrValueである属性を親とし、親の直下の子を全て取得する。
+     * つまり、指定する属性値はユニークでなければならない
+     * @param element
+     * @param parentAttrName    属性名
+     * @param parentAttrValue   属性値
+     * @return
+     */
+    public List<Element> getChildElementList(Element element, String parentAttrName, String parentAttrValue){
+        return getChildElementList(element);
+    }
+
+    /**
      * element直下の子要素を全て取得する
      * @param element
      * @return
      */
-    private List<Element> getChildElementList(Element element){
+    public List<Element> getChildElementList(Element element){
         NodeList childNodeList = element.getChildNodes();
         List<Element> elementList = new ArrayList<Element>();
         for (int i = 0; i < childNodeList.getLength(); i++) {
@@ -79,6 +80,18 @@ public class XMLReading {
             }
         }
         return elementList;
+    }
+
+    /**
+     * 指定した属性値を持っている要素を取得する
+     * @param document      document以下を再帰的に探索する
+     * @param attrName      属性名
+     * @param attrValue     属性値
+     * @return
+     */
+    public Element getElement(Document document, String attrName, String attrValue){
+        Element element = document.getDocumentElement();
+        return getElement(element,attrName,attrValue);
     }
 
     /**

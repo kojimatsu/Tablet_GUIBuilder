@@ -7,59 +7,67 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.CreationWidgetController;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.OutputWidget;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManeger;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManager;
 
 
 /**
  * Created by matsu on 2014/11/07.
  */
-public class ScreenFragment extends Fragment {
+public class ScreenFragment extends Fragment implements View.OnClickListener {
+
+    public static final String MODE = "mode";
 
     private LinearLayout root;
     /**
      *
-     * @param usecaseName ユースケース名
      * @return
      */
-    protected static ScreenFragment newInstance(String usecaseName) {
+    protected static ScreenFragment newInstance() {
         ScreenFragment fragment = new ScreenFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(ShareInformationManeger.ATTRIBUTE_NAME, usecaseName);
-        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        root = new LinearLayout(getActivity());
-        root.setOrientation(LinearLayout.VERTICAL);
-        root.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        ShareInformationManeger shareInformationManeger = ShareInformationManeger.newInstance();
-        root = shareInformationManeger.getScreen(root,getUsecaseName());
+        root = getDefaultLinearLayout();
+        ShareInformationManager shareInformationManager = ShareInformationManager.newInstance();
+        Bundle bundle = getArguments();
+        Mode mode = (Mode) bundle.get(MODE);
+        root = shareInformationManager.getScreen(mode, getUseCaseName(), root);
+        if (mode == Mode.EDITION){
+            root.setOnClickListener(this);
+        }
         return root;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ScreenEditActivity activity = (ScreenEditActivity) getActivity();
-                OutputWidget view = activity.noticeFromScreenFragment();
-                if (view != null) {
-                    root.addView(view.getView());
-                    String usecaseName = getUsecaseName();
-                    ShareInformationManeger shareInformationManeger = ShareInformationManeger.newInstance();
-                    shareInformationManeger.writeWidget(usecaseName, view);
-                }
-            }
-        });
+    private LinearLayout getDefaultLinearLayout(){
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        return linearLayout;
     }
 
-    private String getUsecaseName(){
+
+    public String getUseCaseName(){
         Bundle bundle = getArguments();
-        return bundle.getString(ShareInformationManeger.ATTRIBUTE_NAME);
+        return bundle.getString(ShareInformationManager.ATTRIBUTE_NAME);
+    }
+
+    /**
+     * 画面編集時のView追加処理
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+        int widgetID = WidgetSelectionFragment.getWidgetID();
+        if (widgetID != -1) {
+            OutputWidget createdView = CreationWidgetController.createWidget(Mode.EDITION,getActivity(),widgetID,-1);
+            root.addView(createdView.getView());
+            String useCaseName = getUseCaseName();
+            ShareInformationManager shareInformationManager = ShareInformationManager.newInstance();
+            shareInformationManager.writeWidget(useCaseName, createdView);
+        }
     }
 }

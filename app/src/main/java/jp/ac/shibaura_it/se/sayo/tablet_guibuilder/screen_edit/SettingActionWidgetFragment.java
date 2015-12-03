@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.CreationWidgetController;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.WidgetType;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManager;
 
 /**
  * Created by 浩司 on 2015/11/10.
@@ -32,8 +35,15 @@ public class SettingActionWidgetFragment extends Fragment {
         transition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GestureDialog gestureDialog = GestureDialog.newInstance();
-                gestureDialog.show(getFragmentManager(), "gesture");
+                SettingGestureDialog settingGestureDialog = SettingGestureDialog.newInstance();
+                int uniqueID = getArguments().getInt(ShareInformationManager.ATTRIBUTE_ID);
+                ShareInformationManager manager = ShareInformationManager.newInstance().newInstance();
+                if (manager.getWidgetType(uniqueID) == WidgetType.INPUT){
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(ShareInformationManager.ATTRIBUTE_ID, uniqueID);
+                    settingGestureDialog.setArguments(bundle);
+                    settingGestureDialog.show(getFragmentManager(), "gesture");
+                }
             }
         });
 

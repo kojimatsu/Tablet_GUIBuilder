@@ -22,6 +22,10 @@
             android:name=".screen_edit.ScreenEditActivity"
             android:screenOrientation="landscape" >
         </activity>
+        <activity
+            android:name=".execution.ExecutionActivity"
+            android:screenOrientation="landscape" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>

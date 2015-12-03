@@ -17,8 +17,9 @@ import java.util.List;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
 
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.execution.ExecutionActivity;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.ScreenEditActivity;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManeger;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManager;
 
 
 public class ScreenSelectionActivity extends Activity implements View.OnClickListener {
@@ -31,7 +32,7 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
 
         /*******************************************************************/
         Debug.createXML();
-        ShareInformationManeger.testInit();
+        ShareInformationManager.testInit();
         /*******************************************************************/
         initDraw();
     }
@@ -42,12 +43,12 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
     private void initDraw(){
         LinearLayout root = (LinearLayout) findViewById(R.id.screen_selection_activity_root_linearLayout);
         LinearLayout linearLayout = createLinearLayout();
-        ShareInformationManeger shareInformationManeger = ShareInformationManeger.newInstance();
-        String rootUsecaseScreenName = shareInformationManeger.getChildUseCaseNameList(null).get(0);
+        ShareInformationManager shareInformationManager = ShareInformationManager.newInstance();
+        String rootUsecaseScreenName = shareInformationManager.getChildUseCaseNameList(null).get(0);
         TextView textView = createTextView(rootUsecaseScreenName);
         linearLayout.addView(textView);
         root.addView(linearLayout);
-        List<String> childUsecaseScreenName = shareInformationManeger.getChildUseCaseNameList(rootUsecaseScreenName);
+        List<String> childUsecaseScreenName = shareInformationManager.getChildUseCaseNameList(rootUsecaseScreenName);
         linearLayout = createLinearLayout();
         for (String name : childUsecaseScreenName) {
             linearLayout.addView(createTextView(name));
@@ -69,61 +70,52 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
     }
 
 
-
-
-    /**
-     * 端末の横幅を取得
-     * @return
-     */
-    protected int getDeviceWidth(){
-        WindowManager wm = getWindowManager();
-        Display display = wm.getDefaultDisplay();
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        display.getMetrics(displayMetrics);
-        return displayMetrics.widthPixels;
-    }
-
-    /**
-     * 端末の縦を取得
-     * @return
-     */
-    protected int getDeviceHeight(){
-        WindowManager wm = getWindowManager();
-        Display display = wm.getDefaultDisplay();
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        display.getMetrics(displayMetrics);
-        return displayMetrics.heightPixels;
-    }
-
-
     @Override
     public void onClick(View v) {
         TextView textView = (TextView) v;
         Intent intent = new Intent(getApplicationContext(),ScreenEditActivity.class);
-        String usecaseName = (String) textView.getText();
-        intent.putExtra(ShareInformationManeger.ATTRIBUTE_NAME, usecaseName);
+        String useCaseName = (String) textView.getText();
+        intent.putExtra(ShareInformationManager.ATTRIBUTE_NAME, useCaseName);
         startActivity(intent);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.my, menu);
+        // メニューの要素を追加して取得
+        MenuItem actionItem = menu.add("Execution");
+        // アイコンを設定
+        actionItem.setIcon(R.drawable.ic_media_play);
+        // SHOW_AS_ACTION_ALWAYS:常に表示
+        actionItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_project_change) {
-            //selectProject();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        Intent intent = new Intent(getApplicationContext(),ExecutionActivity.class);
+        startActivity(intent);
+        return true;
     }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.my, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//        if (id == R.id.action_project_change) {
+//            //selectProject();
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
 
 }

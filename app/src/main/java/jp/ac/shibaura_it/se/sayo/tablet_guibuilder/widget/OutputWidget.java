@@ -1,45 +1,51 @@
 package jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.ScreenEditActivity;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.listener.EditModeClickListener;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.listener.ExecutionModeClickListener;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.Mode;
 
 /**
  * Created by matsu on 2015/10/29.
  */
-public class OutputWidget extends View implements View.OnClickListener{
+public class OutputWidget extends View {
 
-    private boolean isOutputWidget = true;
+    private WidgetType widgetType = WidgetType.OUTPUT;
 
     protected int widgetID;                 // ウィジェットの種類を判別するID
     private static int createCount = 0;     // OutputWidget（コンストラクタ）が実行された回数
     protected int uniqueID;                 // 固有のID（重複なし）
     protected LinearLayout view;                    // 自分自身 (クリック時の色変更の挙動のため、LinearLayout内に格納されている)
 
-    protected OutputWidget(Context context, int widgetID) {
+    public OutputWidget(Context context, Mode mode, int widgetID, int uniqueID, View createView) {
         super(context);
         this.widgetID = widgetID;
-        uniqueID = createCount++;
+        if (uniqueID == -1){
+            this.uniqueID = createCount++;
+        }else {
+            this.uniqueID = uniqueID;
+        }
+        setView(mode,createView);
     }
 
-    protected OutputWidget(Context context, int widgetID, String uniqueID) {
-        super(context);
-        this.widgetID = widgetID;
-        this.uniqueID = Integer.parseInt(uniqueID);
+    protected void setIsInputWidget(){
+        widgetType = WidgetType.INPUT;
     }
 
-    protected void setIsInputwidget(){
-        isOutputWidget = false;
-    }
-
-    protected void setView(View view){
+    private void setView(Mode mode, View view){
         LinearLayout linearLayout = new LinearLayout(getContext());
-        linearLayout.setOnClickListener(this);
-        linearLayout.setId(uniqueID);
+        if (mode == Mode.EDITION){
+            linearLayout.setOnClickListener(new EditModeClickListener(getContext()));
+            linearLayout.setId(uniqueID);
+        }else if(mode == Mode.EXECUTION){
+            view.setOnClickListener(new ExecutionModeClickListener(getContext()));
+            view.setId(uniqueID);
+        }
         linearLayout.addView(view);
         this.view = linearLayout;
     }
@@ -48,45 +54,16 @@ public class OutputWidget extends View implements View.OnClickListener{
         return view;
     }
 
-    public boolean isOutputWidget(){
-        return isOutputWidget;
-    }
-
-    public int getWidgetID() {
-        return widgetID;
+    public WidgetType getWidgetType(){
+        return widgetType;
     }
 
     public int getUniqueID() {
         return uniqueID;
     }
 
-    public void setUniqueID(int uniqueID){
-        this.uniqueID = uniqueID;
-        createCount--;
-    }
-
     public String getWidgetName(){
         return CreationWidgetController.getWidgetName(widgetID);
     }
 
-    private static View beforeClickedView = null;
-
-    @Override
-    public void onClick(View v) {
-
-        if (beforeClickedView != null){
-            if(beforeClickedView.getId() != v.getId()) {
-                beforeClickedView.setBackgroundColor(Color.WHITE);
-                v.setBackgroundResource(R.drawable.widget_click);
-                ScreenEditActivity screenEditActivity = (ScreenEditActivity) getContext();
-                screenEditActivity.noticeFromOutputWidget();
-            }
-        }else {
-            v.setBackgroundResource(R.drawable.widget_click);
-            ScreenEditActivity screenEditActivity = (ScreenEditActivity) getContext();
-            screenEditActivity.noticeFromOutputWidget();
-        }
-        beforeClickedView = v;
-
-    }
 }

@@ -134,46 +134,35 @@ public class WidgetSelectionFragment extends Fragment implements
 
     }
 
-    private int viewID = -1;
-    private boolean clicked = false;
-    private View clickedView;
+    private static int widgetID = -1;
+    private static boolean clicked = false;
+    private static View clickedView;
 
     @Override
     public void onClick(View v) {
         clickedView = v;
         setAbstractWidget();
-        if (v.getId() != getViewID()) {
+        if (v.getId() != widgetID) {
             clicked = true;
-            setViewID(v.getId());
-            v.setBackgroundResource(R.drawable.view_pressed_true);
+            widgetID = clickedView.getId();
+            clickedView.setBackgroundResource(R.drawable.view_pressed_true);
         }else {
             if (!clicked) {
                 clicked = true;
-                setViewID(v.getId());
-                v.setBackgroundResource(R.drawable.view_pressed_true);
+                widgetID = clickedView.getId();
+                clickedView.setBackgroundResource(R.drawable.view_pressed_true);
             }else {
                 clicked = false;
-                setViewID(0);
-                v.setBackgroundResource(R.drawable.view_pressed_false);
+                widgetID = -1;
+                clickedView.setBackgroundResource(R.drawable.view_pressed_false);
             }
         }
     }
 
-    private int getViewID() {
-        return viewID;
-    }
-
-    private void setViewID(int viewID) {
-        this.viewID = viewID;
-    }
-
-
-    public OutputWidget createView(){
-        OutputWidget outputWidget = null;
+    public static int getWidgetID(){
         if (clicked){
-            int widgetID = clickedView.getId();
-            outputWidget = CreationWidgetController.createWidget(getActivity(), widgetID);
+            return widgetID;
         }
-        return outputWidget;
+        return -1;
     }
 }
