@@ -33,12 +33,14 @@ public class EditControlFragment extends Fragment {
 
     /**
      * 画面遷移やEntityのCRUD等に関する設定をするFragmentの追加
-     * @param uniqueID
+     * @param selectedView
      */
-    public  void addSettingWidgetFragment(int uniqueID){
+    public  void addSettingWidgetFragment(View selectedView){
         SettingActionWidgetFragment settingWidgetFragment = SettingActionWidgetFragment.newInstance();
         Bundle bundle = new Bundle();
-        bundle.putInt(ShareInformationManager.ATTRIBUTE_ID, uniqueID);
+        // selectedView.getId() == uniqueID
+        // viewを渡してfragment内でuniqueIDを取得に変更
+        bundle.putInt(ShareInformationManager.ATTRIBUTE_ID, selectedView.getId());
         settingWidgetFragment.setArguments(bundle);
         // ActivityにFragmentを登録する。
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

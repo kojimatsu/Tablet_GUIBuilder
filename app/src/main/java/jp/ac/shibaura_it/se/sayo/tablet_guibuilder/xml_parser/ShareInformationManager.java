@@ -226,15 +226,20 @@ public class ShareInformationManager extends XMLWriting {
         return null;
     }
 
+    /**
+     * childUseCaseNameの親ユースケースを取得する
+     * @param childUseCaseName
+     * @return
+     */
     public String getParentUseCase(String childUseCaseName){
         String rootUseCaseName = getChildUseCaseNameList(null).get(0);
-        Element rootUseCaseElement = getElement(shareInformation,ATTRIBUTE_NAME,rootUseCaseName);
+        Element rootUseCaseElement = getElement(shareInformation, ATTRIBUTE_NAME, rootUseCaseName);
         return getParentUseCase(rootUseCaseElement,childUseCaseName);
     }
 
     private String getParentUseCase(Element parent, String childUseCaseName){
         String parentUseCaseName = null;
-        List<Element> childUseCaseList = getChildUseCaseList(getAttribute(parent,ATTRIBUTE_NAME));
+        List<Element> childUseCaseList = getChildUseCaseList(getAttribute(parent, ATTRIBUTE_NAME));
         for (Element childUseCase : childUseCaseList) {
             if (getAttribute(childUseCase,ATTRIBUTE_NAME).equals(childUseCaseName)){
                 parentUseCaseName = getAttribute(parent,ATTRIBUTE_NAME);
@@ -245,5 +250,9 @@ public class ShareInformationManager extends XMLWriting {
             parentUseCaseName = getParentUseCase(childUseCase,childUseCaseName);
         }
         return parentUseCaseName;
+    }
+
+    public void writeWidgetProperty(int uniqueID, String id, String label) {
+
     }
 }

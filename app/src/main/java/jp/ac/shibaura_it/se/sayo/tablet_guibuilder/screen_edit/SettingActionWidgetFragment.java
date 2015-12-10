@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.CreationWidgetController;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.dialog.SettingGestureDialog;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.dialog.SettingPropertyDialog;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.WidgetType;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManager;
 
@@ -31,16 +33,29 @@ public class SettingActionWidgetFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        final int uniqueID = getArguments().getInt(ShareInformationManager.ATTRIBUTE_ID);
+        final Bundle bundle = new Bundle();
+        bundle.putInt(ShareInformationManager.ATTRIBUTE_ID, uniqueID);
+
+
+        ImageView  settingProperty =((ImageView) getActivity().findViewById(R.id.setting_property));
+        settingProperty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettingPropertyDialog settingPropertyDialog = SettingPropertyDialog.newInstance();
+                settingPropertyDialog.setArguments(bundle);
+                settingPropertyDialog.show(getFragmentManager(), "property");
+            }
+        });
+
+
         ImageView  transition =  ((ImageView) getActivity().findViewById(R.id.to_transition));
         transition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SettingGestureDialog settingGestureDialog = SettingGestureDialog.newInstance();
-                int uniqueID = getArguments().getInt(ShareInformationManager.ATTRIBUTE_ID);
                 ShareInformationManager manager = ShareInformationManager.newInstance().newInstance();
                 if (manager.getWidgetType(uniqueID) == WidgetType.INPUT){
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(ShareInformationManager.ATTRIBUTE_ID, uniqueID);
                     settingGestureDialog.setArguments(bundle);
                     settingGestureDialog.show(getFragmentManager(), "gesture");
                 }
