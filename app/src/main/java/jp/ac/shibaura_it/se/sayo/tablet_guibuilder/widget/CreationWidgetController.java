@@ -44,9 +44,9 @@ public class CreationWidgetController {
         String attrValue = String.valueOf(uniqueID);
         ShareInformationManager shareInformationManager = ShareInformationManager.newInstance();
         Element element = shareInformationManager.getElement(shareInformation.getDocumentElement(), ShareInformationManager.ATTRIBUTE_ID, attrValue);
-        if (shareInformationManager.getAttribute(element, ShareInformationManager.ATTRIBUTE_NAME).equals(Widget.BUTTON.name())){
+        if (shareInformationManager.getAttributeValue(element, ShareInformationManager.ATTRIBUTE_NAME).equals(Widget.BUTTON.name())){
             return R.id._button;
-        }else if(shareInformationManager.getAttribute(element, ShareInformationManager.ATTRIBUTE_NAME).equals(Widget.LABEL.name())){
+        }else if(shareInformationManager.getAttributeValue(element, ShareInformationManager.ATTRIBUTE_NAME).equals(Widget.LABEL.name())){
             return R.id._label;
         }
         return -1;

@@ -6,17 +6,22 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.ScreenEditActivity;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.Gesture;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManager;
 
@@ -32,24 +37,36 @@ public class SettingPropertyDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.setting_property_dialog);
+        // ダイアログ設定
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("プロパティを設定してください");
+        builder.setNegativeButton("OK", onCancelListener);
 
-        // Buttonがnullになる
-//        Button ok = ((Button) getActivity().findViewById(R.id.setting_property_ok));
-//        ok.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int uniqueID = getArguments().getInt(ShareInformationManager.ATTRIBUTE_ID);
-//                EditText idView = (EditText) getActivity().findViewById(R.id.setting_id);
-//                String id = idView.getText().toString();
-//                EditText labelView = (EditText) getActivity().findViewById(R.id.setting_label);
-//                String label = labelView.getText().toString();
-//                ShareInformationManager manager = ShareInformationManager.newInstance();
-//                manager.writeWidgetProperty(uniqueID, id, label);
-//            }
-//        });
-        return dialog;
+        // アダプタ設定
+        ShareInformationManager shareInformationManager = ShareInformationManager.newInstance();
+
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        linearLayout.addView(getEditText("ラベル"));
+        linearLayout.addView(getEditText("ID"));
+        builder.setView(linearLayout);
+        return builder.create();
     }
+    private EditText getEditText(String hint){
+        EditText editText = new EditText(getActivity());
+        editText.setHint(hint);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        editText.setLayoutParams(params);
+        return editText;
+    }
+
+
+    // OKボタンが押されたとき
+    private DialogInterface.OnClickListener onCancelListener = new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+            dialog.dismiss();
+        }
+    };
 
 }

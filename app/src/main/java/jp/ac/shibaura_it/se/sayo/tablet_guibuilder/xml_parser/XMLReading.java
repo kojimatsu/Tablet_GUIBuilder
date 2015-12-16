@@ -1,26 +1,12 @@
 package jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser;
 
-import android.os.Environment;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
 
 /**
  * Created by matsu on 2014/11/12.
@@ -30,38 +16,31 @@ public class XMLReading {
     protected Document XML;                // パース対象のXML
     protected String path;          // パース対象のXMLのパス
 
+    public XMLReading(Document XML, String path) {
+        this.XML = XML;
+        this.path = path;
+    }
+
     /**
      * attrNameで指定した属性の値を取得
      * @param element
      * @param attrName
      * @return
      */
-    public String getAttribute(Element element, String attrName) {
+    public String getAttributeValue(Element element, String attrName) {
         return element.getAttribute(attrName);
     }
 
     /**
-     * * parentAttrNameの値がparentAttrValueである属性を親とし、親の直下の子を全て取得する。
-     * つまり、指定する属性値はユニークでなければならない
-     * @param document
-     * @param parentAttrName    属性名
-     * @param parentAttrValue   属性値
+     * parentAttrNameの値がparentAttrValueである属性を親とし、親の直下の子を全て取得する。
+     * @param key_value     keyとvalueが交互に格納されている(必ず偶数個)
      * @return
      */
-    public List<Element> getChildElementList(Document document, String parentAttrName, String parentAttrValue){
-        Element element = getElement(document.getDocumentElement(),parentAttrName,parentAttrValue);
-        return getChildElementList(element);
-    }
-
-    /**
-     * * parentAttrNameの値がparentAttrValueである属性を親とし、親の直下の子を全て取得する。
-     * つまり、指定する属性値はユニークでなければならない
-     * @param element
-     * @param parentAttrName    属性名
-     * @param parentAttrValue   属性値
-     * @return
-     */
-    public List<Element> getChildElementList(Element element, String parentAttrName, String parentAttrValue){
+    public List<Element> getChildElementList(String... key_value){
+        Element element = getElement(key_value);
+        if (element == null){
+            return null;
+        }
         return getChildElementList(element);
     }
 
@@ -84,32 +63,39 @@ public class XMLReading {
 
     /**
      * 指定した属性値を持っている要素を取得する
-     * @param document      document以下を再帰的に探索する
-     * @param attrName      属性名
-     * @param attrValue     属性値
+     * @param key_value     keyとvalueが交互に格納されている(必ず偶数個)
      * @return
      */
-    public Element getElement(Document document, String attrName, String attrValue){
-        Element element = document.getDocumentElement();
-        return getElement(element,attrName,attrValue);
+    public Element getElement(String... key_value){
+        if (key_value.length % 2 == 1){
+            return null;
+        }
+        Element element = XML.getDocumentElement();
+        return getElement(element, key_value);
     }
 
     /**
      * 指定した属性値を持っている要素を取得する
-     * @param element       element以下を再帰的に探索する
-     * @param attrName      属性名
-     * @param attrValue     属性値
+     * @param key_value     keyとvalueが交互に格納されている
      * @return
      */
-    public Element getElement(Element element, String attrName, String attrValue){
+    public Element getElement(Element element, String... key_value){
         Element targetElement = null;
-        if (getAttribute(element, attrName).equals(attrValue)){
+        boolean isMatch = true;
+        for (int i = 0; i < key_value.length; i+=2) {
+            String key = key_value[i];
+            String value = key_value[i+1];
+            if (getAttributeValue(element, key).equals(value) == false){
+                isMatch = false;
+            }
+        }
+        if (isMatch){
             return element;
         }else {
             List<Element> childElementList = getChildElementList(element);
             for (int i = 0; i < childElementList.size(); i++) {
                 Element childElement = childElementList.get(i);
-                targetElement = getElement(childElement, attrName, attrValue);
+                targetElement = getElement(childElement, key_value);
                 if (targetElement != null){
                     break;
                 }
@@ -117,5 +103,15 @@ public class XMLReading {
         }
         return targetElement;
     }
+
+    public Element getParentElemnt(String... key_value){
+        Element element = getElement(key_value);
+        if (element == null){
+            return null;
+        }
+        return (Element) element.getParentNode();
+    }
+
+
 
 }

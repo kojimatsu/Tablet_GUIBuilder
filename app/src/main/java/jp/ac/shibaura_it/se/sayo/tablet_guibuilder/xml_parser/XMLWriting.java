@@ -19,8 +19,8 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class XMLWriting extends XMLReading {
 
-    protected XMLWriting() {
-        super();
+    protected XMLWriting(Document XML, String path) {
+        super(XML,path);
     }
 
     // Documentオブジェクトをファイルに出力
