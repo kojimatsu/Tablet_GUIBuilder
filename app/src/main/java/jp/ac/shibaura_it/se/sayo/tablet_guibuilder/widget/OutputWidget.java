@@ -54,6 +54,10 @@ public class OutputWidget extends View {
         return view;
     }
 
+    public View getVisualView(){
+        return view.getChildAt(0);
+    }
+
     public WidgetType getWidgetType(){
         return widgetType;
     }

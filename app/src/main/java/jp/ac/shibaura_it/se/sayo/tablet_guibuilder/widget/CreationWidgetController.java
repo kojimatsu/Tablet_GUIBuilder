@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.Mode;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManager;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.XMLWriting;
 
 /**
  * Created by 浩司 on 2015/11/10.
@@ -31,19 +32,26 @@ public class CreationWidgetController {
      * @return
      */
     public static OutputWidget createWidget(Mode mode, Context context, int widgetID, int uniqueID) {
-        OutputWidget view = null;
+        OutputWidget outputWidget = null;
         if (widgetID == R.id._button){
-            view = new InputWidget(context, mode, widgetID, uniqueID, createButton(context));
+            outputWidget = new InputWidget(context, mode, widgetID, uniqueID, createButton(context));
         }else if (widgetID == R.id._label){
-            view = new OutputWidget(context, mode, widgetID, uniqueID, createTextView(context));
+            outputWidget = new OutputWidget(context, mode, widgetID, uniqueID, createTextView(context));
         }
-        return view;
+        return outputWidget;
+    }
+
+    public static OutputWidget createWidget(Mode mode, Context context, String label, int widgetID, int uniqueID) {
+        OutputWidget outputWidget = createWidget(mode, context, widgetID, uniqueID);
+        TextView textView = (TextView) outputWidget.getVisualView();
+        textView.setText(label);
+        return outputWidget;
     }
 
     public static int getWidgetID(Document shareInformation, int uniqueID){
         String attrValue = String.valueOf(uniqueID);
         ShareInformationManager shareInformationManager = ShareInformationManager.newInstance();
-        Element element = shareInformationManager.getElement(shareInformation.getDocumentElement(), ShareInformationManager.ATTRIBUTE_ID, attrValue);
+        Element element = shareInformationManager.getElement(shareInformation.getDocumentElement(), XMLWriting.ATTRIBUTE_ID, attrValue);
         if (shareInformationManager.getAttributeValue(element, ShareInformationManager.ATTRIBUTE_NAME).equals(Widget.BUTTON.name())){
             return R.id._button;
         }else if(shareInformationManager.getAttributeValue(element, ShareInformationManager.ATTRIBUTE_NAME).equals(Widget.LABEL.name())){
@@ -75,4 +83,6 @@ public class CreationWidgetController {
         textView.setText("ラベル");
         return textView;
     }
+
+
 }

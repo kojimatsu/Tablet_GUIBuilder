@@ -2,6 +2,7 @@ package jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser;
 
 import android.os.Environment;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -31,24 +32,25 @@ import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.WidgetType;
  */
 public class ShareInformationManager extends XMLWriting {
 
-    protected static Document shareInformation;         // 共通設計情報
-    protected static String shareInformationPath;          // 共通設計情報のパス
+    private static Document shareInformation;         // 共通設計情報
+    private static String shareInformationPath;          // 共通設計情報のパス
+    private static List<OutputWidget> outputWidgetList = new ArrayList<OutputWidget>();
 
     // 共通設計情報（XMLファイル）の要素名や属性名
     public final static String TAG_USECASE = "UseCaseScreen";
-    public final static String TAG_WIDGET = "Widget";
     public final static String TAG_GESTURE = "Gesture";
 
     public final static String ATTRIBUTE_TYPE = "type";
     public final static String ATTRIBUTE_NAME = "name";
-    public final static String ATTRIBUTE_ID = "id";
+    public final static String ATTRIBUTE_ROLL = "roll";
 
     public final static String ATTRIBUTE_VALUE_INPUT = WidgetType.INPUT.name();
     public final static String ATTRIBUTE_VALUE_OUTPUT = WidgetType.OUTPUT.name();
+    public final static String ATTRIBUTE_VALUE_SCREEN = "screen";
     public final static String ATTRIBUTE_VALUE_MOVE = "move";
 
     public ShareInformationManager(Document shareInformation, String shareInformationPath) {
-        super(shareInformation,shareInformationPath);
+        super(shareInformation, shareInformationPath);
     }
 
     public static ShareInformationManager newInstance(){
@@ -62,7 +64,7 @@ public class ShareInformationManager extends XMLWriting {
      * 今回はテス地のため、端末内のSDカードから取得する
      */
     public static void testInit(){
-        shareInformationPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Debug.testPath;
+        shareInformationPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Debug.testSIPath;
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = null;
         try {
@@ -78,6 +80,15 @@ public class ShareInformationManager extends XMLWriting {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public OutputWidget getOutputWidget(int uniqueID) {
+        for (OutputWidget outputWidget : outputWidgetList) {
+            if (outputWidget.getUniqueID() == uniqueID){
+                return outputWidget;
+            }
+        }
+        return null;
     }
 
     /**
@@ -128,6 +139,7 @@ public class ShareInformationManager extends XMLWriting {
      * @param view
      */
     public void writeWidget(String useCaseName, OutputWidget view) {
+        outputWidgetList.add(view);
         Element widgetElement = shareInformation.createElement(TAG_WIDGET);
         if (view.getWidgetType() == WidgetType.OUTPUT){
             widgetElement.setAttribute(ATTRIBUTE_TYPE, ATTRIBUTE_VALUE_OUTPUT);
@@ -143,7 +155,7 @@ public class ShareInformationManager extends XMLWriting {
         }
         Element targetElement = getElement(ATTRIBUTE_NAME, useCaseName);
         targetElement.appendChild(widgetElement);
-        write(shareInformation, shareInformationPath);
+        write();
     }
 
 
@@ -154,13 +166,23 @@ public class ShareInformationManager extends XMLWriting {
      * @return
      */
     public LinearLayout getScreen(Mode mode, String useCaseName, LinearLayout root) {
-        List<Element> elementList = getChildElementList(ATTRIBUTE_NAME, useCaseName);
+        if (mode == Mode.EDITION){
+            outputWidgetList = new ArrayList<OutputWidget>();
+        }
+        List<Element> elementList = getChildElementList(ATTRIBUTE_NAME, useCaseName, ATTRIBUTE_TYPE, ATTRIBUTE_VALUE_SCREEN);
         for (int i = 0; i < elementList.size(); i++) {
             Element element = elementList.get(i);
             if (element.getTagName().equals(TAG_WIDGET)){
                 int uniqueID = Integer.parseInt(element.getAttribute(ATTRIBUTE_ID));
                 int widgetID = CreationWidgetController.getWidgetID(shareInformation, uniqueID);
-                OutputWidget view = CreationWidgetController.createWidget(mode,root.getContext(), widgetID, uniqueID);
+                GUIInformationManager manager = GUIInformationManager.newInstance();
+                String label = manager.getLabel(uniqueID);
+                OutputWidget view = null;
+                if (label != null){
+                    view = CreationWidgetController.createWidget(mode, root.getContext(), label, widgetID, uniqueID);
+                }else {
+                    view = CreationWidgetController.createWidget(mode, root.getContext(), widgetID, uniqueID);
+                }
                 root.addView(view.getView());
             }
         }
@@ -185,12 +207,12 @@ public class ShareInformationManager extends XMLWriting {
                 for (Element gestureChildElement : gestureChildList) {
                     if (gestureChildElement.getTagName().equals(TAG_USECASE)){
                         gestureChildElement.setAttribute(ATTRIBUTE_NAME,toTransitionUseCaseName);
-                        write(shareInformation, shareInformationPath);
+                        write();
                         return;
                     }
                 }
                 gesture.appendChild(useCase);
-                write(shareInformation, shareInformationPath);
+                write();
                 return;
             }
         }
@@ -200,7 +222,7 @@ public class ShareInformationManager extends XMLWriting {
         gestureElement.setAttribute(ATTRIBUTE_NAME, gestureName);
         gestureElement.appendChild(useCase);
         widgetElement.appendChild(gestureElement);
-        write(shareInformation, shareInformationPath);
+        write();
     }
 
     /**
@@ -263,7 +285,20 @@ public class ShareInformationManager extends XMLWriting {
         return parentUseCaseName;
     }
 
-    public void writeWidgetProperty(int uniqueID, String id, String label) {
 
+
+    public void writeRoll(int uniqueID, String roll) {
+        Element element = getElement(ATTRIBUTE_ID, String.valueOf(uniqueID));
+        element.setAttribute(ATTRIBUTE_ROLL, roll);
+        write();
+    }
+
+    public String getRoll(int uniqueID) {
+        Element element = getElement(ATTRIBUTE_ID, String.valueOf(uniqueID));
+        String roll = getAttributeValue(element,ATTRIBUTE_ROLL);
+        if (roll.equals("")){
+            return null;
+        }
+        return roll;
     }
 }

@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManager;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.XMLWriting;
 
 /**
  * Created by matsu on 2014/12/01.
@@ -33,18 +33,15 @@ public class EditControlFragment extends Fragment {
 
     /**
      * 画面遷移やEntityのCRUD等に関する設定をするFragmentの追加
-     * @param selectedView
+     * @param uniqueID
      */
-    public  void addSettingWidgetFragment(View selectedView){
+    public  void addSettingWidgetFragment(int uniqueID){
         SettingActionWidgetFragment settingWidgetFragment = SettingActionWidgetFragment.newInstance();
         Bundle bundle = new Bundle();
-        // selectedView.getId() == uniqueID
-        // viewを渡してfragment内でuniqueIDを取得に変更
-        bundle.putInt(ShareInformationManager.ATTRIBUTE_ID, selectedView.getId());
+        bundle.putInt(XMLWriting.ATTRIBUTE_ID, uniqueID);
         settingWidgetFragment.setArguments(bundle);
         // ActivityにFragmentを登録する。
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        // Layout位置先の指定
         fragmentTransaction.replace(R.id.setting_widget, settingWidgetFragment);
         fragmentTransaction.commit();
     }

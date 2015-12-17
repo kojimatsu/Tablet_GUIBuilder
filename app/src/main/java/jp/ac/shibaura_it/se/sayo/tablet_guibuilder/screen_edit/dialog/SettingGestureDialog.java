@@ -15,6 +15,7 @@ import java.util.List;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.Gesture;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManager;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.XMLWriting;
 
 /**
  * Created by 浩司 on 2015/11/10.
@@ -49,8 +50,8 @@ public class SettingGestureDialog extends DialogFragment {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
-                int uniqueID = getArguments().getInt(ShareInformationManager.ATTRIBUTE_ID);
-                bundle.putInt(ShareInformationManager.ATTRIBUTE_ID, uniqueID);
+                int uniqueID = getArguments().getInt(XMLWriting.ATTRIBUTE_ID);
+                bundle.putInt(XMLWriting.ATTRIBUTE_ID, uniqueID);
                 String gestureName = Gesture.values()[position].name();
                 bundle.putString(ShareInformationManager.ATTRIBUTE_NAME, gestureName);
                 SettingTransitionScreenDialog stsDialog = SettingTransitionScreenDialog.newInstance();

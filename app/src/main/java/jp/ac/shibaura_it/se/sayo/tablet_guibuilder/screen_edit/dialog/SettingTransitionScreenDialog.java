@@ -15,6 +15,7 @@ import java.util.List;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.ScreenEditActivity;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManager;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.XMLWriting;
 
 /**
  * Created by 浩司 on 2015/12/03.
@@ -51,7 +52,7 @@ public class SettingTransitionScreenDialog extends DialogFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
-                int uniqueID = getArguments().getInt(ShareInformationManager.ATTRIBUTE_ID);
+                int uniqueID = getArguments().getInt(XMLWriting.ATTRIBUTE_ID);
                 String gestureName = getArguments().getString(ShareInformationManager.ATTRIBUTE_NAME);
                 String toTransitionUseCaseName = useCaseNameList.get(position);
                 shareInformationManager.writeTransitionScreen(uniqueID,gestureName,toTransitionUseCaseName);

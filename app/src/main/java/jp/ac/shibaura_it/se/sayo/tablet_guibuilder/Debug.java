@@ -19,14 +19,19 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.GUIInformationManager;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManager;
+
 /**
  * Created by matsu on 2014/10/26.
  */
 public class Debug  {
 
     static public  String testDir = "/xml/";
-    static public  String testFileName = "sample.xml";
-    static public  String testPath = testDir + testFileName;
+    static public  String testSIFileName = "share_information.xml";
+    static public  String testGIFileName = "GUI_information.xml";
+    static public  String testSIPath = testDir + testSIFileName;
+    static public  String testGIPath = testDir + testGIFileName;
 
     static public void createXML(){
         DocumentBuilderFactory dbfactory = DocumentBuilderFactory.newInstance();
@@ -34,20 +39,23 @@ public class Debug  {
             DocumentBuilder dbuilder = dbfactory.newDocumentBuilder();
             Document document = dbuilder.newDocument();
             /***********************/
-            String USECASE_SCREEN="UseCaseScreen";
-            Element root = document.createElement(USECASE_SCREEN);
-            root.setAttribute("name","休講・補講情報を検索する");
+            Element root = document.createElement(ShareInformationManager.TAG_USECASE);
+            root.setAttribute(ShareInformationManager.ATTRIBUTE_NAME,"休講・補講情報を検索する");
+            root.setAttribute(ShareInformationManager.ATTRIBUTE_TYPE,ShareInformationManager.ATTRIBUTE_VALUE_SCREEN);
 
-            Element child = document.createElement(USECASE_SCREEN);
-            child.setAttribute("name","休講情報を検索する");
+            Element child = document.createElement(ShareInformationManager.TAG_USECASE);
+            child.setAttribute(ShareInformationManager.ATTRIBUTE_NAME,"休講情報を検索する");
+            child.setAttribute(ShareInformationManager.ATTRIBUTE_TYPE,ShareInformationManager.ATTRIBUTE_VALUE_SCREEN);
             root.appendChild(child);
 
-            child = document.createElement(USECASE_SCREEN);
-            child.setAttribute("name","補講情報を検索する");
+            child = document.createElement(ShareInformationManager.TAG_USECASE);
+            child.setAttribute(ShareInformationManager.ATTRIBUTE_NAME,"補講情報を検索する");
+            child.setAttribute(ShareInformationManager.ATTRIBUTE_TYPE,ShareInformationManager.ATTRIBUTE_VALUE_SCREEN);
             root.appendChild(child);
 
-            child = document.createElement(USECASE_SCREEN);
-            child.setAttribute("name","検索条件を設定する");
+            child = document.createElement(ShareInformationManager.TAG_USECASE);
+            child.setAttribute(ShareInformationManager.ATTRIBUTE_NAME,"検索条件を設定する");
+            child.setAttribute(ShareInformationManager.ATTRIBUTE_TYPE,ShareInformationManager.ATTRIBUTE_VALUE_SCREEN);
             root.appendChild(child);
 
             document.appendChild(root);
@@ -59,10 +67,20 @@ public class Debug  {
             if(!dir.exists()){
                 dir.mkdir();
             }
-            File file = new File(path + testFileName);
+            File file = new File(path + testSIFileName);
             file.createNewFile();
-
             transformer.transform(new DOMSource(document), new StreamResult(file));
+
+            /***********************/
+            document = dbuilder.newDocument();
+            root = document.createElement(GUIInformationManager.TAG_WIDGETLIST);
+            document.appendChild(root);
+            /***********************/
+            file = new File(path + testGIFileName);
+            file.createNewFile();
+            transformer.transform(new DOMSource(document), new StreamResult(file));
+
+
         } catch (ParserConfigurationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

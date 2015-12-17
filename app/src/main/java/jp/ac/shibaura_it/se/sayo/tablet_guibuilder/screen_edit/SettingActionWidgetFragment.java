@@ -7,12 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.dialog.SettingGestureDialog;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.dialog.SettingPropertyDialog;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.WidgetType;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManager;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.XMLWriting;
 
 /**
  * Created by 浩司 on 2015/11/10.
@@ -33,10 +33,9 @@ public class SettingActionWidgetFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        final int uniqueID = getArguments().getInt(ShareInformationManager.ATTRIBUTE_ID);
+        final int uniqueID = getArguments().getInt(XMLWriting.ATTRIBUTE_ID);
         final Bundle bundle = new Bundle();
-        bundle.putInt(ShareInformationManager.ATTRIBUTE_ID, uniqueID);
-
+        bundle.putInt(XMLWriting.ATTRIBUTE_ID,uniqueID);
 
         ImageView  settingProperty =((ImageView) getActivity().findViewById(R.id.setting_property));
         settingProperty.setOnClickListener(new View.OnClickListener() {

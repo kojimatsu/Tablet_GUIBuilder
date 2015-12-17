@@ -30,11 +30,11 @@ public class EditModeClickListener implements View.OnClickListener {
             if(beforeClickedView.getId() != v.getId()) {
                 beforeClickedView.setBackgroundColor(Color.WHITE);
                 v.setBackgroundResource(R.drawable.widget_click);
-                editControlFragment.addSettingWidgetFragment(v);
+                editControlFragment.addSettingWidgetFragment(v.getId());
             }
         }else {
             v.setBackgroundResource(R.drawable.widget_click);
-            editControlFragment.addSettingWidgetFragment(v);
+            editControlFragment.addSettingWidgetFragment(v.getId());
         }
         beforeClickedView = v;
     }

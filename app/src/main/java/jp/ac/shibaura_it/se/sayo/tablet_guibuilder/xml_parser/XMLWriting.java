@@ -19,32 +19,27 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class XMLWriting extends XMLReading {
 
+    public final static String TAG_WIDGET = "Widget";
+    public final static String ATTRIBUTE_ID = "id";
+
     protected XMLWriting(Document XML, String path) {
         super(XML,path);
     }
 
     // Documentオブジェクトをファイルに出力
-    protected void write(Document document, String path) {
+    protected void write() {
 
         File file =new File(path);
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file);
             StreamResult result = new StreamResult(fos);
-
-            // Transformerファクトリを生成
             TransformerFactory transFactory = TransformerFactory.newInstance();
             // Transformerを取得
             Transformer transformer = transFactory.newTransformer();
-
-            // エンコード：UTF-8、インデントありを指定
             transformer.setOutputProperty("encoding", "UTF-8");
             transformer.setOutputProperty("indent", "yes");
-
-            // transformerに渡すソースを生成
-            DOMSource source = new DOMSource(document);
-
-            // 出力実行
+            DOMSource source = new DOMSource(XML);
             transformer.transform(source, result);
             fos.close();
         } catch (FileNotFoundException e) {
@@ -56,7 +51,6 @@ public class XMLWriting extends XMLReading {
         } catch (TransformerException e) {
             e.printStackTrace();
         }
-
     }
 
 }
