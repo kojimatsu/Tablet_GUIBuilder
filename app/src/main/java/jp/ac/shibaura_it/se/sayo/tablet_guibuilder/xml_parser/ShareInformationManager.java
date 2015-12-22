@@ -2,7 +2,6 @@ package jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser;
 
 import android.os.Environment;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -21,6 +20,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.CRUD;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.Mode;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.CreationWidgetController;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.Gesture;
@@ -39,6 +39,7 @@ public class ShareInformationManager extends XMLWriting {
     // 共通設計情報（XMLファイル）の要素名や属性名
     public final static String TAG_USECASE = "UseCaseScreen";
     public final static String TAG_GESTURE = "Gesture";
+    public final static String TAG_ENTITY_DATA = "EntityData";
 
     public final static String ATTRIBUTE_TYPE = "type";
     public final static String ATTRIBUTE_NAME = "name";
@@ -91,20 +92,17 @@ public class ShareInformationManager extends XMLWriting {
         return null;
     }
 
+    public String getRootUseCase(){
+        Element root = XML.getDocumentElement();
+        return getAttributeValue(root,ATTRIBUTE_NAME);
+    }
     /**
-     * useCaseName(ユースケース)を親に持つ,ユースケース(子)の名前を全て返す．
-     * nullの場合はルートユースケース名を返す．
-     * 追記:指定したユースケースの直下のみ
+     * useCaseName(ユースケース)を親に持つ,子ユースケース（直下）の名前を全て返す．
      * @param useCaseName
      * @return
      */
     public List<String> getChildUseCaseNameList(String useCaseName) {
         List<String> useCaseNameList = new ArrayList<String>();
-        if (useCaseName == null) {
-            Element element = shareInformation.getDocumentElement();
-            useCaseNameList.add(getAttributeValue(element, ATTRIBUTE_NAME));
-            return useCaseNameList;
-        }
         List<Element> elementList = getChildUseCaseList(useCaseName);
         for (int i = 0; i < elementList.size(); i++) {
             Element element = elementList.get(i);
@@ -114,15 +112,13 @@ public class ShareInformationManager extends XMLWriting {
     }
 
     /**
-     * useCaseName(ユースケース)を親に持つ,ユースケース(子)の名前を全て返す．
-     * nullの場合はルートユースケース名を返す．
-     * 追記:指定したユースケースの直下のみ
+     * useCaseName(ユースケース)を親に持つ,子ユースケースのElementを全て返す．．
      * @param useCaseName
      * @return
      */
     private List<Element> getChildUseCaseList(String useCaseName) {
         List<Element> childUseCaseList = new ArrayList<Element>();
-        List<Element> elementList = getChildElementList(ATTRIBUTE_NAME, useCaseName);
+        List<Element> elementList = getChildElementList(ATTRIBUTE_NAME, useCaseName, ATTRIBUTE_TYPE, ATTRIBUTE_VALUE_SCREEN);
         for (int i = 0; i < elementList.size(); i++) {
             Element element = elementList.get(i);
             if (element.getTagName().equals(ShareInformationManager.TAG_USECASE)){
@@ -140,7 +136,7 @@ public class ShareInformationManager extends XMLWriting {
      */
     public void writeWidget(String useCaseName, OutputWidget view) {
         outputWidgetList.add(view);
-        Element widgetElement = shareInformation.createElement(TAG_WIDGET);
+        Element widgetElement = XML.createElement(TAG_WIDGET);
         if (view.getWidgetType() == WidgetType.OUTPUT){
             widgetElement.setAttribute(ATTRIBUTE_TYPE, ATTRIBUTE_VALUE_OUTPUT);
         }else if(view.getWidgetType() == WidgetType.INPUT){
@@ -148,13 +144,8 @@ public class ShareInformationManager extends XMLWriting {
         }
         widgetElement.setAttribute(ATTRIBUTE_NAME, view.getWidgetName());
         widgetElement.setAttribute(ATTRIBUTE_ID, String.valueOf(view.getUniqueID()));
-        if (view.getWidgetType() == WidgetType.INPUT){
-            Element gestureElement = shareInformation.createElement(TAG_GESTURE);
-            gestureElement.setAttribute(ATTRIBUTE_NAME, Gesture.Tap.name());
-            widgetElement.appendChild(gestureElement);
-        }
-        Element targetElement = getElement(ATTRIBUTE_NAME, useCaseName);
-        targetElement.appendChild(widgetElement);
+        Element useCaseElement = getElement(ATTRIBUTE_NAME, useCaseName, ATTRIBUTE_TYPE, ATTRIBUTE_VALUE_SCREEN);
+        useCaseElement.appendChild(widgetElement);
         write();
     }
 
@@ -169,24 +160,34 @@ public class ShareInformationManager extends XMLWriting {
         if (mode == Mode.EDITION){
             outputWidgetList = new ArrayList<OutputWidget>();
         }
-        List<Element> elementList = getChildElementList(ATTRIBUTE_NAME, useCaseName, ATTRIBUTE_TYPE, ATTRIBUTE_VALUE_SCREEN);
-        for (int i = 0; i < elementList.size(); i++) {
-            Element element = elementList.get(i);
-            if (element.getTagName().equals(TAG_WIDGET)){
-                int uniqueID = Integer.parseInt(element.getAttribute(ATTRIBUTE_ID));
-                int widgetID = CreationWidgetController.getWidgetID(shareInformation, uniqueID);
-                GUIInformationManager manager = GUIInformationManager.newInstance();
-                String label = manager.getLabel(uniqueID);
-                OutputWidget view = null;
-                if (label != null){
-                    view = CreationWidgetController.createWidget(mode, root.getContext(), label, widgetID, uniqueID);
-                }else {
-                    view = CreationWidgetController.createWidget(mode, root.getContext(), widgetID, uniqueID);
-                }
-                root.addView(view.getView());
+        List<Element> widgetList = getWidgetList(useCaseName);
+        for (int i = 0; i < widgetList.size(); i++) {
+            Element widget = widgetList.get(i);
+            int uniqueID = Integer.parseInt(getAttributeValue(widget, ATTRIBUTE_ID));
+            int widgetID = CreationWidgetController.getWidgetID(uniqueID);
+            GUIInformationManager manager = GUIInformationManager.newInstance();
+            String label = manager.getLabel(uniqueID);
+            OutputWidget view = null;
+            if (label != null){
+                view = CreationWidgetController.createWidget(mode, root.getContext(), label, widgetID, uniqueID);
+            }else {
+                view = CreationWidgetController.createWidget(mode, root.getContext(), widgetID, uniqueID);
             }
+            root.addView(view.getView());
         }
         return root;
+    }
+
+    private List<Element> getWidgetList(String useCaseName){
+        List<Element> widgetList = new ArrayList<Element>();
+        List<Element> childList = getChildElementList(ATTRIBUTE_NAME, useCaseName, ATTRIBUTE_TYPE, ATTRIBUTE_VALUE_SCREEN);
+        for (int i = 0; i < childList.size(); i++) {
+            Element child = childList.get(i);
+            if (child.getTagName().equals(TAG_WIDGET)) {
+                widgetList.add(child);
+            }
+        }
+        return widgetList;
     }
 
     /**
@@ -196,33 +197,36 @@ public class ShareInformationManager extends XMLWriting {
      * @param toTransitionUseCaseName
      */
     public void writeTransitionScreen(int uniqueID, String gestureName, String toTransitionUseCaseName){
-        List<Element> gestureList = getChildElementList(ATTRIBUTE_ID, String.valueOf(uniqueID));
-        Element useCase = shareInformation.createElement(TAG_USECASE);
-        useCase.setAttribute(ATTRIBUTE_NAME, toTransitionUseCaseName);
-        useCase.setAttribute(ATTRIBUTE_TYPE, ATTRIBUTE_VALUE_MOVE);
-        for (Element gesture : gestureList) {
-            // 既に同じGestureが設定されている場合は上書きする
-            if (getAttributeValue(gesture, ATTRIBUTE_NAME).equals(gestureName)){
-                List<Element> gestureChildList = getChildElementList(gesture);
-                for (Element gestureChildElement : gestureChildList) {
-                    if (gestureChildElement.getTagName().equals(TAG_USECASE)){
-                        gestureChildElement.setAttribute(ATTRIBUTE_NAME,toTransitionUseCaseName);
-                        write();
-                        return;
-                    }
-                }
-                gesture.appendChild(useCase);
-                write();
-                return;
+        Element toTransitionUseCaseElement = XML.createElement(TAG_USECASE);
+        toTransitionUseCaseElement.setAttribute(ATTRIBUTE_NAME, toTransitionUseCaseName);
+        toTransitionUseCaseElement.setAttribute(ATTRIBUTE_TYPE, ATTRIBUTE_VALUE_MOVE);
+
+        Element gesture = getGestureElement(uniqueID, gestureName);
+        if (gesture == null){   // 設定したGestureがまだ共通設計情報に書き込まれていなければ新たなGesture要素を生成する
+            Element gestureElement = XML.createElement(TAG_GESTURE);
+            gestureElement.setAttribute(ATTRIBUTE_NAME, gestureName);
+            gestureElement.appendChild(toTransitionUseCaseElement);
+            Element widgetElement = getElement(ATTRIBUTE_ID, String.valueOf(uniqueID));
+            widgetElement.appendChild(gestureElement);
+        }else {                 // 既に同じGestureが設定されている場合はその中に遷移先ユースケースを追加する
+            Element settedUseCaseElement = getToTransitionUseCaseElement(uniqueID, Gesture.getGesture(gestureName));
+            if (settedUseCaseElement == null){
+                gesture.appendChild(toTransitionUseCaseElement);
+            }else {
+                settedUseCaseElement.setAttribute(ATTRIBUTE_NAME,toTransitionUseCaseName);
             }
         }
-        // 設定したGestureがまだ共通設計情報に書き込まれていなければ新たなGesture要素を生成する
-        Element widgetElement = getElement(ATTRIBUTE_ID, String.valueOf(uniqueID));
-        Element gestureElement = shareInformation.createElement(TAG_GESTURE);
-        gestureElement.setAttribute(ATTRIBUTE_NAME, gestureName);
-        gestureElement.appendChild(useCase);
-        widgetElement.appendChild(gestureElement);
         write();
+    }
+
+    private Element getGestureElement(int uniqueID, String gestureName){
+        List<Element> widgetChildList = getChildElementList(ATTRIBUTE_ID, String.valueOf(uniqueID));
+        for (Element gesture : widgetChildList) {
+            if (gestureName.equals(getAttributeValue(gesture,ATTRIBUTE_NAME))){
+                return gesture;
+            }
+        }
+        return null;
     }
 
     /**
@@ -247,13 +251,18 @@ public class ShareInformationManager extends XMLWriting {
      * @param gesture
      * @return
      */
-    public String getToTransitionUseCase(int uniqueID, Gesture gesture) {
-        Element widgetElement = getElement(ATTRIBUTE_ID, String.valueOf(uniqueID));
-        Element gestureElement = getElement(widgetElement, ATTRIBUTE_NAME, gesture.name());
+    public String getToTransitionUseCaseName(int uniqueID, Gesture gesture) {
+        Element useCaseElement = getToTransitionUseCaseElement(uniqueID, gesture);
+        return getAttributeValue(useCaseElement,ATTRIBUTE_NAME);
+    }
+
+
+    public Element getToTransitionUseCaseElement(int uniqueID, Gesture gesture) {
+        Element gestureElement = getGestureElement(uniqueID, gesture.name());
         List<Element> childElementList = getChildElementList(gestureElement);
         for (Element useCaseElement : childElementList) {
             if (useCaseElement.getTagName().equals(TAG_USECASE)){
-                return getAttributeValue(useCaseElement, ATTRIBUTE_NAME);
+                return useCaseElement;
             }
         }
         return null;
@@ -264,25 +273,9 @@ public class ShareInformationManager extends XMLWriting {
      * @param childUseCaseName
      * @return
      */
-    public String getParentUseCase(String childUseCaseName){
-        String rootUseCaseName = getChildUseCaseNameList(null).get(0);
-        Element rootUseCaseElement = getElement(ATTRIBUTE_NAME, rootUseCaseName);
-        return getParentUseCase(rootUseCaseElement,childUseCaseName);
-    }
-
-    private String getParentUseCase(Element parent, String childUseCaseName){
-        String parentUseCaseName = null;
-        List<Element> childUseCaseList = getChildUseCaseList(getAttributeValue(parent, ATTRIBUTE_NAME));
-        for (Element childUseCase : childUseCaseList) {
-            if (getAttributeValue(childUseCase, ATTRIBUTE_NAME).equals(childUseCaseName)){
-                parentUseCaseName = getAttributeValue(parent, ATTRIBUTE_NAME);
-            }
-            if (parentUseCaseName != null){
-                break;
-            }
-            parentUseCaseName = getParentUseCase(childUseCase,childUseCaseName);
-        }
-        return parentUseCaseName;
+    public String getParentUseCaseName(String childUseCaseName){
+        Element parentElement = getParentElement(ATTRIBUTE_NAME, childUseCaseName,ATTRIBUTE_TYPE, ATTRIBUTE_VALUE_SCREEN);
+        return getAttributeValue(parentElement,ATTRIBUTE_NAME);
     }
 
 
@@ -300,5 +293,62 @@ public class ShareInformationManager extends XMLWriting {
             return null;
         }
         return roll;
+    }
+
+    public String getEntityDataName(int uniqueID, String gestureName, CRUD crud) {
+        Element widget = getElement(ATTRIBUTE_ID, String.valueOf(uniqueID));
+        Element gesture = getElement(widget,ATTRIBUTE_NAME,gestureName);
+        if (gesture == null){
+            return null;
+        }
+        Element entityData = getElement(gesture, ATTRIBUTE_TYPE, crud.name());
+        if (entityData == null){
+            return null;
+        }
+        return getAttributeValue(entityData,ATTRIBUTE_NAME);
+    }
+
+    /**
+     * 各C,R,U,DのEntityは1つのWidgetに対し、同時に定義できるが
+     * 例えばCを複数個定義することはできない。
+     * C,R,U,D : OK
+     * C,C,R,U,D : NG
+     * @param uniqueID
+     * @param gestureName
+     * @param crud
+     * @param dataName
+     */
+    public void writeEntityData(int uniqueID, String gestureName, CRUD crud, String dataName) {
+        Element widgetElement = getElement(ATTRIBUTE_ID, String.valueOf(uniqueID));
+        Element entityDataElement = getElement(widgetElement,ATTRIBUTE_TYPE, crud.name());
+        if (entityDataElement == null){
+            entityDataElement = XML.createElement(TAG_ENTITY_DATA);
+            entityDataElement.setAttribute(ATTRIBUTE_TYPE, crud.name());
+        }
+        entityDataElement.setAttribute(ATTRIBUTE_NAME, dataName);
+
+        Element gestureElement = getElement(widgetElement, ATTRIBUTE_NAME, gestureName);
+        if (gestureElement == null){
+            gestureElement = XML.createElement(TAG_GESTURE);
+            gestureElement.setAttribute(ATTRIBUTE_NAME,gestureName);
+        }
+
+        Element parentElement = getParentElement(entityDataElement);
+        if (gestureElement != parentElement && parentElement != null){
+            parentElement.removeChild(entityDataElement);
+            if (!parentElement.hasChildNodes()){
+                widgetElement.removeChild(parentElement);
+            }
+            gestureElement.appendChild(entityDataElement);
+        }
+        if (parentElement == null){
+            gestureElement.appendChild(entityDataElement);
+        }
+        parentElement = getParentElement(gestureElement);
+        if (parentElement == null){
+            widgetElement.appendChild(gestureElement);
+        }
+
+        write();
     }
 }

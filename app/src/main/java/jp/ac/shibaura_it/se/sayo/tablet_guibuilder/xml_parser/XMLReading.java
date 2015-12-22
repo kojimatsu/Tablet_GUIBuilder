@@ -8,6 +8,8 @@ import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
+
 /**
  * Created by matsu on 2014/11/12.
  */
@@ -104,12 +106,20 @@ public class XMLReading {
         return targetElement;
     }
 
-    public Element getParentElemnt(String... key_value){
+    public Element getParentElement(String... key_value){
         Element element = getElement(key_value);
         if (element == null){
             return null;
         }
         return (Element) element.getParentNode();
+    }
+
+    public Element getParentElement(Element childElement){
+        Node node = childElement.getParentNode();
+        if (node instanceof Element){
+            return (Element) node;
+        }
+        return null;
     }
 
 

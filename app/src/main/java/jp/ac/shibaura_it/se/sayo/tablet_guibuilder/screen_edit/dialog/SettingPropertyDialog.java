@@ -80,8 +80,8 @@ public class SettingPropertyDialog extends DialogFragment {
             View view = outputWidget.getVisualView();
             if (view instanceof TextView){
                 TextView textView = (TextView) view;
-                textView.setText(labelStr);
                 if ( !labelStr.equals("") ){
+                    textView.setText(labelStr);
                     guiInformationManager.writeLabel(uniqueID, labelStr);
                 }
                 if ( !rollStr.equals("") ){

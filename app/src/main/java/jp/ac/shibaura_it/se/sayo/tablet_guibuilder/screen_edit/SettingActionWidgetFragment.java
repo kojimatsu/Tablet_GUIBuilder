@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
+import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.dialog.SelectionOperationEntityDataDialog;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.dialog.SettingGestureDialog;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.dialog.SettingPropertyDialog;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.WidgetType;
@@ -34,13 +35,13 @@ public class SettingActionWidgetFragment extends Fragment {
         super.onStart();
 
         final int uniqueID = getArguments().getInt(XMLWriting.ATTRIBUTE_ID);
-        final Bundle bundle = new Bundle();
-        bundle.putInt(XMLWriting.ATTRIBUTE_ID,uniqueID);
 
         ImageView  settingProperty =((ImageView) getActivity().findViewById(R.id.setting_property));
         settingProperty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(XMLWriting.ATTRIBUTE_ID,uniqueID);
                 SettingPropertyDialog settingPropertyDialog = SettingPropertyDialog.newInstance();
                 settingPropertyDialog.setArguments(bundle);
                 settingPropertyDialog.show(getFragmentManager(), "property");
@@ -52,6 +53,8 @@ public class SettingActionWidgetFragment extends Fragment {
         transition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(XMLWriting.ATTRIBUTE_ID,uniqueID);
                 SettingGestureDialog settingGestureDialog = SettingGestureDialog.newInstance();
                 ShareInformationManager manager = ShareInformationManager.newInstance().newInstance();
                 if (manager.getWidgetType(uniqueID) == WidgetType.INPUT){
@@ -65,7 +68,11 @@ public class SettingActionWidgetFragment extends Fragment {
         operateEntity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Bundle bundle = new Bundle();
+                bundle.putInt(XMLWriting.ATTRIBUTE_ID,uniqueID);
+                SelectionOperationEntityDataDialog selectionOperationEntityDataDialog = SelectionOperationEntityDataDialog.newInstance();
+                selectionOperationEntityDataDialog.setArguments(bundle);
+                selectionOperationEntityDataDialog.show(getFragmentManager(),"entity");
             }
         });
 

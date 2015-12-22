@@ -44,7 +44,7 @@ public class ScreenSelectionActivity extends Activity implements View.OnClickLis
         LinearLayout root = (LinearLayout) findViewById(R.id.screen_selection_activity_root_linearLayout);
         LinearLayout linearLayout = createLinearLayout();
         ShareInformationManager shareInformationManager = ShareInformationManager.newInstance();
-        String rootUsecaseScreenName = shareInformationManager.getChildUseCaseNameList(null).get(0);
+        String rootUsecaseScreenName = shareInformationManager.getRootUseCase();
         TextView textView = createTextView(rootUsecaseScreenName);
         linearLayout.addView(textView);
         root.addView(linearLayout);

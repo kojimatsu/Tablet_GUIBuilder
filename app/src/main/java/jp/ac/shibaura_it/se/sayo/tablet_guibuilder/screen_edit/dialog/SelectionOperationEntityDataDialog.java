@@ -14,33 +14,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.CRUD;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.widget.Gesture;
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.xml_parser.ShareInformationManager;
 
 /**
- * Created by 浩司 on 2015/11/10.
+ * Created by 浩司 on 2015/12/21.
  */
-public class SettingGestureDialog extends DialogFragment {
+public class SelectionOperationEntityDataDialog extends DialogFragment{
 
     private List<String> itemlist = new ArrayList<String>();
 
 
-    public static SettingGestureDialog newInstance(){
-        return new SettingGestureDialog();
+    public static SelectionOperationEntityDataDialog newInstance(){
+        return new SelectionOperationEntityDataDialog();
     }
 
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // ダイアログ設定
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("操作を選択してください");
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("EntityDataに対するCRUDを設定してください");
         builder.setNegativeButton("CLOSE", onCancelListener);
 
-        // アダプタ設定
-        for (Gesture gesture : Gesture.values()) {
-            itemlist.add(gesture.name());
-        }
+        itemlist.add(CRUD.Create.name());
+        itemlist.add(CRUD.Read.name());
+        itemlist.add(CRUD.Update.name());
+        itemlist.add(CRUD.Delete.name());
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, itemlist);
         ListView listView = new ListView(getActivity());
         listView.setAdapter(arrayAdapter);
@@ -49,20 +47,13 @@ public class SettingGestureDialog extends DialogFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
-                Bundle bundle = getArguments();
-                String gestureName = Gesture.values()[position].name();
-                bundle.putString(ShareInformationManager.ATTRIBUTE_NAME, gestureName);
-                CRUD crud = (CRUD) bundle.getSerializable(CRUD.class.getName());
-                if ( crud == null){
-                    SettingTransitionScreenDialog stsDialog = SettingTransitionScreenDialog.newInstance();
-                    stsDialog.setArguments(bundle);
-                    stsDialog.show(getFragmentManager(), "transition");
-                }else if(crud == CRUD.Create){
-                    SettingCreationEntityDataDialog settingCreationEntityDataDialog = SettingCreationEntityDataDialog.newInstance();
-                    settingCreationEntityDataDialog.setArguments(bundle);
-                    settingCreationEntityDataDialog.show(getFragmentManager(),"setData");
-                }
-                dismiss();
+            Bundle bundle = getArguments();
+            CRUD crud = CRUD.values()[position];
+            bundle.putSerializable(CRUD.class.getName(),crud);
+            SettingGestureDialog settingGestureDialog = SettingGestureDialog.newInstance();
+            settingGestureDialog.setArguments(bundle);
+            settingGestureDialog.show(getFragmentManager(), "gesture");
+            dismiss();
             }
         });
 

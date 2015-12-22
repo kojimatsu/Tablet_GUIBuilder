@@ -2,11 +2,9 @@ package jp.ac.shibaura_it.se.sayo.tablet_guibuilder.execution;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.Debug;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.R;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.CreationScreenController;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.Mode;
@@ -26,7 +24,7 @@ public class ExecutionActivity extends Activity{
         setContentView(R.layout.execution_activity);
         CreationScreenController.setSize(this, R.id.executon_screen);
         ShareInformationManager manager = ShareInformationManager.newInstance();
-        String rootUseCaseName = manager.getChildUseCaseNameList(null).get(0);
+        String rootUseCaseName = manager.getRootUseCase();
         setScreenFragment(rootUseCaseName);
 
         findViewById(R.id.screen_revert).setOnClickListener(new View.OnClickListener() {
@@ -35,7 +33,7 @@ public class ExecutionActivity extends Activity{
                 ShareInformationManager shareInformationManager = ShareInformationManager.newInstance();
                 Bundle bundle = screen.getArguments();
                 String currentUseCaseName = bundle.getString(ShareInformationManager.ATTRIBUTE_NAME);
-                String parentUseCaseName = shareInformationManager.getParentUseCase(currentUseCaseName);
+                String parentUseCaseName = shareInformationManager.getParentUseCaseName(currentUseCaseName);
                 if (parentUseCaseName != null){
                     setScreenFragment(parentUseCaseName);
                 }

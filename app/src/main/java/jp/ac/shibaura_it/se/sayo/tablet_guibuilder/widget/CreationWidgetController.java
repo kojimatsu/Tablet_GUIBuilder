@@ -48,13 +48,13 @@ public class CreationWidgetController {
         return outputWidget;
     }
 
-    public static int getWidgetID(Document shareInformation, int uniqueID){
-        String attrValue = String.valueOf(uniqueID);
+    public static int getWidgetID(int uniqueID){
+        String uniqueIDStr = String.valueOf(uniqueID);
         ShareInformationManager shareInformationManager = ShareInformationManager.newInstance();
-        Element element = shareInformationManager.getElement(shareInformation.getDocumentElement(), XMLWriting.ATTRIBUTE_ID, attrValue);
-        if (shareInformationManager.getAttributeValue(element, ShareInformationManager.ATTRIBUTE_NAME).equals(Widget.BUTTON.name())){
+        Element widget = shareInformationManager.getElement(XMLWriting.ATTRIBUTE_ID, uniqueIDStr);
+        if (shareInformationManager.getAttributeValue(widget, ShareInformationManager.ATTRIBUTE_NAME).equals(Widget.BUTTON.name())){
             return R.id._button;
-        }else if(shareInformationManager.getAttributeValue(element, ShareInformationManager.ATTRIBUTE_NAME).equals(Widget.LABEL.name())){
+        }else if(shareInformationManager.getAttributeValue(widget, ShareInformationManager.ATTRIBUTE_NAME).equals(Widget.LABEL.name())){
             return R.id._label;
         }
         return -1;
