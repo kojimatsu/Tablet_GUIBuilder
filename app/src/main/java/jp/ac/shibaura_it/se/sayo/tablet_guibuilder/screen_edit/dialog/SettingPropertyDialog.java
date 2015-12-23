@@ -77,17 +77,14 @@ public class SettingPropertyDialog extends DialogFragment {
             OutputWidget outputWidget = shareInformationManager.getOutputWidget(uniqueID);
             String labelStr = label.getText().toString();
             String rollStr = roll.getText().toString();
-            View view = outputWidget.getVisualView();
-            if (view instanceof TextView){
-                TextView textView = (TextView) view;
-                if ( !labelStr.equals("") ){
-                    textView.setText(labelStr);
-                    guiInformationManager.writeLabel(uniqueID, labelStr);
-                }
-                if ( !rollStr.equals("") ){
-                    shareInformationManager.writeRoll(uniqueID, rollStr);
-                }
+
+            if (outputWidget.setText(labelStr)){
+                guiInformationManager.writeLabel(uniqueID, labelStr);
             }
+            if ( !rollStr.equals("") ){
+                shareInformationManager.writeRoll(uniqueID, rollStr);
+            }
+
             dialog.dismiss();
         }
     };

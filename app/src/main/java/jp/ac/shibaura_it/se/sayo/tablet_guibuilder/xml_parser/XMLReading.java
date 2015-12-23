@@ -34,16 +34,34 @@ public class XMLReading {
     }
 
     /**
-     * parentAttrNameの値がparentAttrValueである属性を親とし、親の直下の子を全て取得する。
+     * elementを親とし、key_valueとマッチングする子孫を全て返す
+     * @param element       親
      * @param key_value     keyとvalueが交互に格納されている(必ず偶数個)
      * @return
      */
-    public List<Element> getChildElementList(String... key_value){
-        Element element = getElement(key_value);
-        if (element == null){
-            return null;
+    public List<Element> getChildElementList(Element element, String... key_value){
+        List<Element> elementList = new ArrayList<Element>();
+        return getChildElementList(elementList,element,key_value);
+    }
+
+    private List<Element> getChildElementList(List<Element> elementList, Element element, String... key_value){
+        List<Element> childElementList = getChildElementList(element);
+        for (Element childElement : childElementList) {
+            boolean isMatch = true;
+            for (int i = 0; i < key_value.length; i+=2) {
+                String key = key_value[i];
+                String value = key_value[i+1];
+                if (getAttributeValue(childElement, key).equals(value) == false){
+                    isMatch = false;
+                }
+            }
+            if (isMatch){
+                elementList.add(childElement);
+            }
+            elementList = getChildElementList(elementList, childElement, key_value);
+
         }
-        return getChildElementList(element);
+        return elementList;
     }
 
     /**
@@ -62,6 +80,20 @@ public class XMLReading {
         }
         return elementList;
     }
+
+    /**
+     * key_valueとマッチングする属性を親とし、親の直下の子を全て取得する。
+     * @param key_value     keyとvalueが交互に格納されている(必ず偶数個)
+     * @return
+     */
+    public List<Element> getChildElementList(String... key_value){
+        Element element = getElement(key_value);
+        if (element == null){
+            return null;
+        }
+        return getChildElementList(element);
+    }
+
 
     /**
      * 指定した属性値を持っている要素を取得する

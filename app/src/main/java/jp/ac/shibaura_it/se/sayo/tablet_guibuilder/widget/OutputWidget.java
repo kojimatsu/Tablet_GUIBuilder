@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.listener.EditModeClickListener;
 import jp.ac.shibaura_it.se.sayo.tablet_guibuilder.screen_edit.listener.ExecutionModeClickListener;
@@ -70,4 +71,15 @@ public class OutputWidget extends View {
         return CreationWidgetController.getWidgetName(widgetID);
     }
 
+    public boolean setText(String text) {
+        View view = getVisualView();
+        if (view instanceof TextView){
+            TextView textView = (TextView) view;
+            if ( !text.equals("") ){
+                textView.setText(text);
+                return true;
+            }
+        }
+        return false;
+    }
 }

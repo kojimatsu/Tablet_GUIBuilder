@@ -157,7 +157,7 @@ public class ShareInformationManager extends XMLWriting {
      * @return
      */
     public LinearLayout getScreen(Mode mode, String useCaseName, LinearLayout root) {
-        if (mode == Mode.EDITION){
+        if (mode == Mode.EXECUTION){
             outputWidgetList = new ArrayList<OutputWidget>();
         }
         List<Element> widgetList = getWidgetList(useCaseName);
@@ -166,13 +166,21 @@ public class ShareInformationManager extends XMLWriting {
             int uniqueID = Integer.parseInt(getAttributeValue(widget, ATTRIBUTE_ID));
             int widgetID = CreationWidgetController.getWidgetID(uniqueID);
             GUIInformationManager manager = GUIInformationManager.newInstance();
+            Element entityDataElement = getElement(widget, ATTRIBUTE_TYPE, CRUD.Read.name());
+            String entityDataName = null;
+            if (entityDataElement != null){
+                entityDataName = getAttributeValue(entityDataElement,ATTRIBUTE_NAME);
+            }
             String label = manager.getLabel(uniqueID);
             OutputWidget view = null;
-            if (label != null){
+            if(entityDataElement != null){
+                view = CreationWidgetController.createWidget(mode, root.getContext(), entityDataName, widgetID, uniqueID);
+            }else if (label != null){
                 view = CreationWidgetController.createWidget(mode, root.getContext(), label, widgetID, uniqueID);
             }else {
                 view = CreationWidgetController.createWidget(mode, root.getContext(), widgetID, uniqueID);
             }
+            //outputWidgetList.add(view);
             root.addView(view.getView());
         }
         return root;
@@ -274,7 +282,7 @@ public class ShareInformationManager extends XMLWriting {
      * @return
      */
     public String getParentUseCaseName(String childUseCaseName){
-        Element parentElement = getParentElement(ATTRIBUTE_NAME, childUseCaseName,ATTRIBUTE_TYPE, ATTRIBUTE_VALUE_SCREEN);
+        Element parentElement = getParentElement(ATTRIBUTE_NAME, childUseCaseName, ATTRIBUTE_TYPE, ATTRIBUTE_VALUE_SCREEN);
         return getAttributeValue(parentElement,ATTRIBUTE_NAME);
     }
 
@@ -320,35 +328,82 @@ public class ShareInformationManager extends XMLWriting {
      */
     public void writeEntityData(int uniqueID, String gestureName, CRUD crud, String dataName) {
         Element widgetElement = getElement(ATTRIBUTE_ID, String.valueOf(uniqueID));
-        Element entityDataElement = getElement(widgetElement,ATTRIBUTE_TYPE, crud.name());
+        Element entityDataElement = getElement(widgetElement, ATTRIBUTE_TYPE, crud.name());
         if (entityDataElement == null){
             entityDataElement = XML.createElement(TAG_ENTITY_DATA);
             entityDataElement.setAttribute(ATTRIBUTE_TYPE, crud.name());
         }
         entityDataElement.setAttribute(ATTRIBUTE_NAME, dataName);
 
-        Element gestureElement = getElement(widgetElement, ATTRIBUTE_NAME, gestureName);
-        if (gestureElement == null){
-            gestureElement = XML.createElement(TAG_GESTURE);
-            gestureElement.setAttribute(ATTRIBUTE_NAME,gestureName);
-        }
-
-        Element parentElement = getParentElement(entityDataElement);
-        if (gestureElement != parentElement && parentElement != null){
-            parentElement.removeChild(entityDataElement);
-            if (!parentElement.hasChildNodes()){
-                widgetElement.removeChild(parentElement);
+        if (crud != CRUD.Read){
+            Element gestureElement = getElement(widgetElement, ATTRIBUTE_NAME, gestureName);
+            if (gestureElement == null){
+                gestureElement = XML.createElement(TAG_GESTURE);
+                gestureElement.setAttribute(ATTRIBUTE_NAME,gestureName);
             }
-            gestureElement.appendChild(entityDataElement);
-        }
-        if (parentElement == null){
-            gestureElement.appendChild(entityDataElement);
-        }
-        parentElement = getParentElement(gestureElement);
-        if (parentElement == null){
-            widgetElement.appendChild(gestureElement);
+
+            Element parentElement = getParentElement(entityDataElement);
+            if (gestureElement != parentElement && parentElement != null){
+                parentElement.removeChild(entityDataElement);
+                if (!parentElement.hasChildNodes()){
+                    widgetElement.removeChild(parentElement);
+                }
+                gestureElement.appendChild(entityDataElement);
+            }
+            if (parentElement == null){
+                gestureElement.appendChild(entityDataElement);
+            }
+            parentElement = getParentElement(gestureElement);
+            if (parentElement == null){
+                widgetElement.appendChild(gestureElement);
+            }
+        }else {
+            Element parentElement = getParentElement(entityDataElement);
+            if (parentElement == null){
+                widgetElement.appendChild(entityDataElement);
+            }
         }
 
         write();
+    }
+
+    public List<String> getSettableEntityDataNameList(int uniqueID) {
+        Element widgetElement = getElement(ATTRIBUTE_ID, String.valueOf(uniqueID));
+        Element useCaseElement = getParentElement(widgetElement);
+        // ルートユースケースからuseCaseElementまでの遷移順序を取得する
+        List<Element> moveScreenPath = new ArrayList<Element>();
+        moveScreenPath.add(useCaseElement);
+        String useCaseName = getAttributeValue(useCaseElement, ATTRIBUTE_NAME);
+        moveScreenPath = getMoveScreenPath(moveScreenPath,useCaseName);
+
+        List<String> settableEntityDataNameList = new ArrayList<String>();
+        List<Element> entityDataElementList = new ArrayList<Element>();
+        for (Element moveScreen : moveScreenPath) {
+            List<Element> widgetElementList = getWidgetList(getAttributeValue(moveScreen,ATTRIBUTE_NAME));
+            for (Element widget : widgetElementList) {
+                entityDataElementList.addAll(getChildElementList(widget, ATTRIBUTE_TYPE, CRUD.Create.name()));
+            }
+        }
+        for (Element entityDataElement : entityDataElementList) {
+            settableEntityDataNameList.add(getAttributeValue(entityDataElement, ATTRIBUTE_NAME));
+        }
+        return settableEntityDataNameList;
+    }
+
+    private List<Element> getMoveScreenPath(List<Element> path, String useCaseName){
+        Element typeMoveUseCaseElement = getElement(ATTRIBUTE_NAME, useCaseName, ATTRIBUTE_TYPE, ATTRIBUTE_VALUE_MOVE);
+        if(typeMoveUseCaseElement != null){
+            Element gestureElement = getParentElement(typeMoveUseCaseElement);
+            Element widgetElement = getParentElement(gestureElement);
+            Element postUseCaseElement = getParentElement(widgetElement);
+            path.add(postUseCaseElement);
+            getMoveScreenPath(path, getAttributeValue(postUseCaseElement,ATTRIBUTE_NAME));
+        }
+        return path;
+    }
+
+    public void setOutputWidgetText(int uniqueID, String dataName) {
+        OutputWidget outputWidget = getOutputWidget(uniqueID);
+        outputWidget.setText(dataName);
     }
 }
