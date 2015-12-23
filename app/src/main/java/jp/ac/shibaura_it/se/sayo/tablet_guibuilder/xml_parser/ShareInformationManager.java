@@ -157,9 +157,7 @@ public class ShareInformationManager extends XMLWriting {
      * @return
      */
     public LinearLayout getScreen(Mode mode, String useCaseName, LinearLayout root) {
-        if (mode == Mode.EXECUTION){
-            outputWidgetList = new ArrayList<OutputWidget>();
-        }
+        outputWidgetList = new ArrayList<OutputWidget>();
         List<Element> widgetList = getWidgetList(useCaseName);
         for (int i = 0; i < widgetList.size(); i++) {
             Element widget = widgetList.get(i);
@@ -180,7 +178,7 @@ public class ShareInformationManager extends XMLWriting {
             }else {
                 view = CreationWidgetController.createWidget(mode, root.getContext(), widgetID, uniqueID);
             }
-            //outputWidgetList.add(view);
+            outputWidgetList.add(view);
             root.addView(view.getView());
         }
         return root;
